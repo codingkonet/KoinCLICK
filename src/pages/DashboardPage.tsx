@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import {
   supabase,
   type KoinSettings,
@@ -12,6 +12,7 @@ import {
   formatMoney,
   getCurrencyInfo,
 } from '../lib/currencies'
+import { compressImageToDataUrl } from '../lib/imageUtils'
 import { useAuth } from '../context/AuthContext'
 import { ensureStarterData } from '../lib/seedUserData'
 import { AdminControlPanel } from '../components/AdminControlPanel'
@@ -40,6 +41,10 @@ import {
   CreditCard,
   Shield,
   RotateCcw,
+  Camera,
+  Upload,
+  X,
+  Image as ImageIcon,
 } from 'lucide-react'
 
 const CATEGORIES = [
@@ -103,6 +108,16 @@ export function DashboardPage() {
   const [txEmoji, setTxEmoji] = useState('🍱')
   const [txDate, setTxDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [txNotes, setTxNotes] = useState('')
+  const [txReceiptImage, setTxReceiptImage] = useState<string | null>(null)
+  const [txReceiptKind, setTxReceiptKind] = useState<'receipt' | 'product'>('receipt')
+  const [txPhotoBusy, setTxPhotoBusy] = useState(false)
+
+  // Photo Preview & Live Camera Modal State
+  const [previewPhotoTx, setPreviewPhotoTx] = useState<KoinTransaction | null>(null)
+  const [showCameraModal, setShowCameraModal] = useState(false)
+  const [cameraError, setCameraError] = useState<string | null>(null)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const streamRef = useRef<MediaStream | null>(null)
 
   // Add / Edit ClickPad Modal State
   const [showPadModal, setShowPadModal] = useState(false)
@@ -251,7 +266,10 @@ export function DashboardPage() {
   }
 
   // Open Add Transaction Modal
-  const openAddTransactionModal = (presetType: 'expense' | 'income' = 'expense') => {
+  const openAddTransactionModal = (
+    presetType: 'expense' | 'income' = 'expense',
+    presetPhotoKind?: 'receipt' | 'product'
+  ) => {
     setEditingTx(null)
     setTxTitle('')
     setTxAmount('')
@@ -261,6 +279,8 @@ export function DashboardPage() {
     setTxEmoji(presetType === 'income' ? '💰' : '🍱')
     setTxDate(new Date().toISOString().slice(0, 10))
     setTxNotes('')
+    setTxReceiptImage(null)
+    setTxReceiptKind(presetPhotoKind || 'receipt')
     setShowTxModal(true)
   }
 
@@ -284,8 +304,106 @@ export function DashboardPage() {
         : new Date().toISOString().slice(0, 10)
     )
     setTxNotes(tx.notes || '')
+    setTxReceiptImage(tx.receipt_image || null)
+    setTxReceiptKind(tx.receipt_kind === 'product' ? 'product' : 'receipt')
     setShowTxModal(true)
   }
+
+  // Handle Photo File Selection (Camera or Gallery)
+  const handlePhotoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setTxPhotoBusy(true)
+    try {
+      const compressed = await compressImageToDataUrl(file)
+      setTxReceiptImage(compressed)
+      showToast(
+        txReceiptKind === 'product'
+          ? '📦 Product photo attached!'
+          : '🧾 Receipt (reçu) photo attached!'
+      )
+    } catch {
+      showToast('Could not process photo. Please try another image.')
+    } finally {
+      setTxPhotoBusy(false)
+    }
+  }
+
+  // Live Camera Helpers
+  const stopCameraStream = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop())
+      streamRef.current = null
+    }
+  }, [])
+
+  const openLiveCamera = async () => {
+    setCameraError(null)
+    setShowCameraModal(true)
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        setCameraError('Live camera is unavailable here. Use "Take Photo" or "Upload Photo" instead.')
+        return
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } },
+        audio: false,
+      })
+      streamRef.current = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+      }
+    } catch {
+      setCameraError('Camera permission denied or no camera found. Use "Upload Photo" instead.')
+    }
+  }
+
+  const closeLiveCamera = () => {
+    stopCameraStream()
+    setShowCameraModal(false)
+  }
+
+  const captureFromLiveCamera = async () => {
+    const video = videoRef.current
+    if (!video || !video.videoWidth) return
+    setTxPhotoBusy(true)
+    try {
+      const canvas = document.createElement('canvas')
+      const maxDim = 960
+      let w = video.videoWidth
+      let h = video.videoHeight
+      if (w > maxDim || h > maxDim) {
+        if (w >= h) {
+          h = Math.round((h * maxDim) / w)
+          w = maxDim
+        } else {
+          w = Math.round((w * maxDim) / h)
+          h = maxDim
+        }
+      }
+      canvas.width = w
+      canvas.height = h
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, w, h)
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.72)
+        setTxReceiptImage(dataUrl)
+        showToast(
+          txReceiptKind === 'product'
+            ? '📦 Product photo captured!'
+            : '🧾 Receipt (reçu) photo captured!'
+        )
+      }
+      closeLiveCamera()
+    } finally {
+      setTxPhotoBusy(false)
+    }
+  }
+
+  useEffect(() => {
+    return () => stopCameraStream()
+  }, [stopCameraStream])
 
   // Save (Add or Edit) Transaction
   const handleSaveTransaction = async (e: React.FormEvent) => {
@@ -311,6 +429,8 @@ export function DashboardPage() {
           notes: txNotes.trim(),
           original_amount: enteredAmount,
           original_currency: txCurrency,
+          receipt_image: txReceiptImage,
+          receipt_kind: txReceiptImage ? txReceiptKind : null,
           tx_date: isoDate,
         })
         .eq('id', editingTx.id)
@@ -342,6 +462,8 @@ export function DashboardPage() {
           notes: txNotes.trim(),
           original_amount: enteredAmount,
           original_currency: txCurrency,
+          receipt_image: txReceiptImage,
+          receipt_kind: txReceiptImage ? txReceiptKind : null,
           tx_date: isoDate,
         })
         .select()
@@ -883,12 +1005,22 @@ export function DashboardPage() {
                     </div>
 
                     <div className="flex flex-col gap-2.5 shrink-0">
-                      <button
-                        onClick={() => openAddTransactionModal('expense')}
-                        className="px-4 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer transition-all"
-                      >
-                        <Plus className="w-4 h-4" />+ Add Expense
-                      </button>
+                      <div className="grid grid-cols-2 sm:flex sm:flex-col gap-2">
+                        <button
+                          onClick={() => openAddTransactionModal('expense')}
+                          className="px-4 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer transition-all"
+                        >
+                          <Plus className="w-4 h-4 shrink-0" />
+                          <span>Add Expense</span>
+                        </button>
+                        <button
+                          onClick={() => openAddTransactionModal('expense', 'receipt')}
+                          className="px-4 py-2.5 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-amber-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all"
+                        >
+                          <Camera className="w-4 h-4 shrink-0" />
+                          <span>Photo / Reçu</span>
+                        </button>
+                      </div>
                       <div className="grid grid-cols-2 gap-2">
                         <button
                           onClick={() => openAddTransactionModal('income')}
@@ -1147,14 +1279,26 @@ export function DashboardPage() {
                                   <div className="font-bold text-sm text-white truncate">
                                     {tx.title}
                                   </div>
-                                  <div className="text-[11px] text-slate-500">
-                                    {tx.category} •{' '}
-                                    {tx.tx_date
-                                      ? new Date(tx.tx_date).toLocaleDateString(undefined, {
-                                          month: 'short',
-                                          day: 'numeric',
-                                        })
-                                      : 'Today'}
+                                  <div className="text-[11px] text-slate-500 flex flex-wrap items-center gap-1.5">
+                                    <span>
+                                      {tx.category} •{' '}
+                                      {tx.tx_date
+                                        ? new Date(tx.tx_date).toLocaleDateString(undefined, {
+                                            month: 'short',
+                                            day: 'numeric',
+                                          })
+                                        : 'Today'}
+                                    </span>
+                                    {tx.receipt_image && (
+                                      <button
+                                        type="button"
+                                        onClick={() => setPreviewPhotoTx(tx)}
+                                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-amber-300 font-semibold hover:bg-amber-500/25 cursor-pointer"
+                                      >
+                                        <Camera className="w-2.5 h-2.5" />
+                                        {tx.receipt_kind === 'product' ? 'Product' : 'Reçu'}
+                                      </button>
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -1447,6 +1591,16 @@ export function DashboardPage() {
                                       tx.original_currency || 'USD'
                                     )}
                                   </span>
+                                )}
+                                {tx.receipt_image && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setPreviewPhotoTx(tx)}
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-amber-300 font-semibold hover:bg-amber-500/25 cursor-pointer"
+                                  >
+                                    <Camera className="w-3 h-3" />
+                                    {tx.receipt_kind === 'product' ? 'View Product' : 'View Reçu'}
+                                  </button>
                                 )}
                               </div>
                               {tx.notes && (
@@ -1895,6 +2049,98 @@ export function DashboardPage() {
                 />
               </div>
 
+              {/* Product or Receipt (Reçu) Photo Capture */}
+              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                    <Camera className="w-4 h-4 text-amber-400" />
+                    Product or Receipt (Reçu) Photo
+                  </span>
+                  <div className="inline-flex p-0.5 rounded-xl bg-slate-900 border border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => setTxReceiptKind('receipt')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold cursor-pointer ${
+                        txReceiptKind === 'receipt'
+                          ? 'bg-amber-500 text-slate-950'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      🧾 Reçu / Receipt
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTxReceiptKind('product')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold cursor-pointer ${
+                        txReceiptKind === 'product'
+                          ? 'bg-emerald-500 text-slate-950'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      📦 Product
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <label className="py-2.5 px-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-amber-300 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer text-center">
+                    <Camera className="w-3.5 h-3.5 shrink-0" />
+                    <span>Take Photo</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      onChange={handlePhotoFileChange}
+                      className="hidden"
+                    />
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={openLiveCamera}
+                    className="py-2.5 px-2 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/35 text-sky-300 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <ImageIcon className="w-3.5 h-3.5 shrink-0" />
+                    <span>Live Cam</span>
+                  </button>
+
+                  <label className="py-2.5 px-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer text-center">
+                    <Upload className="w-3.5 h-3.5 shrink-0" />
+                    <span>Upload</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoFileChange}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {txPhotoBusy && (
+                  <p className="text-[11px] text-amber-300 animate-pulse">
+                    Compressing photo...
+                  </p>
+                )}
+
+                {txReceiptImage && (
+                  <div className="relative rounded-xl overflow-hidden border border-slate-700 bg-slate-900">
+                    <img
+                      src={txReceiptImage}
+                      alt="Attached product or receipt"
+                      className="w-full max-h-48 object-contain bg-slate-950"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setTxReceiptImage(null)}
+                      title="Remove photo"
+                      className="absolute top-2 right-2 p-1.5 rounded-lg bg-slate-950/90 hover:bg-rose-500/80 text-white border border-slate-700 cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
@@ -2204,6 +2450,124 @@ export function DashboardPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 5: Photo Preview Lightbox (Product / Reçu) */}
+      {previewPhotoTx && previewPhotoTx.receipt_image && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
+          onClick={() => setPreviewPhotoTx(null)}
+        >
+          <div
+            className="w-full max-w-xl rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-800 p-4 sm:p-6 shadow-2xl space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 mb-1">
+                  <Camera className="w-3 h-3" />
+                  {previewPhotoTx.receipt_kind === 'product' ? 'Product Photo' : 'Receipt / Reçu'}
+                </span>
+                <h3 className="text-base sm:text-lg font-bold text-white truncate">
+                  {previewPhotoTx.emoji} {previewPhotoTx.title}
+                </h3>
+                <p className="text-xs text-slate-400">
+                  {fmt(Number(previewPhotoTx.amount))} • {previewPhotoTx.category}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewPhotoTx(null)}
+                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer shrink-0"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center">
+              <img
+                src={previewPhotoTx.receipt_image}
+                alt={previewPhotoTx.title}
+                className="max-h-[65vh] w-auto object-contain"
+              />
+            </div>
+
+            <div className="flex items-center justify-between gap-2">
+              <a
+                href={previewPhotoTx.receipt_image}
+                download={`KoinCLICK_${previewPhotoTx.receipt_kind || 'receipt'}_${previewPhotoTx.id}.jpg`}
+                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold flex items-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Download Photo
+              </a>
+              <button
+                type="button"
+                onClick={() => setPreviewPhotoTx(null)}
+                className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 6: Live Camera Capture */}
+      {showCameraModal && (
+        <div className="fixed inset-0 z-[60] bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+          <div className="w-full max-w-lg rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-800 p-4 sm:p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <Camera className="w-5 h-5 text-amber-400" />
+                Capture {txReceiptKind === 'product' ? 'Product' : 'Receipt (Reçu)'}
+              </h3>
+              <button
+                type="button"
+                onClick={closeLiveCamera}
+                className="p-2 rounded-xl bg-slate-800 text-slate-300 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {cameraError ? (
+              <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300">
+                {cameraError}
+              </div>
+            ) : (
+              <div className="rounded-2xl overflow-hidden bg-black border border-slate-800 aspect-video flex items-center justify-center">
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={closeLiveCamera}
+                className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer"
+              >
+                Cancel
+              </button>
+              {!cameraError && (
+                <button
+                  type="button"
+                  onClick={captureFromLiveCamera}
+                  className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Camera className="w-4 h-4" />
+                  Snap Photo
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}

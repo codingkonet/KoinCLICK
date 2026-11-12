@@ -8,3 +8,5 @@ android/local.properties
 windows-app/bin/
 windows-app/obj/
 *.log
+
+.vercel

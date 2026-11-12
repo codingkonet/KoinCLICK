@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     watch: {
-      ignored: ['**/windows-app/**', '**/release/**', '**/android/**'],
+      ignored: ['**/windows-app/**', '**/release/**', '**/android/**', '**/.vercel/**'],
     },
   },
 })

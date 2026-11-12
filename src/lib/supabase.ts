@@ -59,6 +59,8 @@ export interface KoinTransaction {
   notes?: string | null
   original_amount?: number | null
   original_currency?: string | null
+  receipt_image?: string | null
+  receipt_kind?: 'receipt' | 'product' | null
   tx_date: string
 }
 
