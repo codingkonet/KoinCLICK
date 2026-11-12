@@ -736,36 +736,37 @@ export function DashboardPage() {
       <div>
         {/* Floating Toast Notification */}
         {toast && (
-          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-emerald-500 text-slate-950 font-bold text-sm shadow-2xl shadow-emerald-500/30 animate-bounce">
+          <div className="fixed bottom-20 lg:bottom-6 inset-x-4 sm:inset-x-auto sm:right-6 z-50 flex items-center justify-center sm:justify-start gap-2.5 px-4 py-3 rounded-2xl bg-emerald-500 text-slate-950 font-bold text-xs sm:text-sm shadow-2xl shadow-emerald-500/30 animate-bounce">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span>{toast}</span>
+            <span className="truncate">{toast}</span>
           </div>
         )}
 
         {/* Top Navigation Bar */}
         <header className="sticky top-0 z-30 backdrop-blur-xl bg-slate-950/90 border-b border-slate-800/80">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-md shadow-emerald-500/20">
-                <Coins className="w-5 h-5 text-slate-950" />
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0">
+                <Coins className="w-4 h-4 sm:w-5 sm:h-5 text-slate-950" />
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-extrabold tracking-tight text-white">
+              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                <span className="text-lg sm:text-xl font-extrabold tracking-tight text-white truncate">
                   Koin<span className="text-emerald-400">CLICK</span>
                 </span>
-                <span className="hidden sm:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-900 border border-slate-700 text-slate-300">
+                <span className="hidden md:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-900 border border-slate-700 text-slate-300 truncate max-w-[140px]">
                   {settings?.display_name || user?.email}
                 </span>
                 {isAdmin && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300">
-                    <Shield className="w-3 h-3" /> Admin
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-1.5 sm:px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 shrink-0">
+                    <Shield className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                    <span className="hidden sm:inline">Admin</span>
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Simplified Top Navigation Menu (Without Jars) */}
-            <nav className="order-3 lg:order-2 w-full lg:w-auto flex items-center gap-1 overflow-x-auto bg-slate-900 p-1 rounded-xl border border-slate-800">
+            {/* Desktop Top Navigation Menu (Without Jars) */}
+            <nav className="hidden lg:flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
               {(
                 [
                   { id: 'overview', label: 'Pulse & Overview' },
@@ -790,25 +791,25 @@ export function DashboardPage() {
             </nav>
 
             {/* Right Controls: Start From Zero + Multi-Currency Selector + Settings + Sign Out */}
-            <div className="order-2 lg:order-3 flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <button
                 type="button"
                 onClick={() => setShowResetModal(true)}
                 title="Reset & Start From Zero"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold cursor-pointer transition-colors"
+                className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold cursor-pointer transition-colors"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Start From Zero</span>
               </button>
 
               {/* Multi-Currency Selector */}
-              <div className="relative flex items-center bg-slate-900 border border-slate-800 hover:border-emerald-500/40 rounded-xl px-2.5 py-1.5">
-                <Globe className="w-3.5 h-3.5 text-emerald-400 mr-1.5 shrink-0" />
+              <div className="relative flex items-center bg-slate-900 border border-slate-800 hover:border-emerald-500/40 rounded-xl px-2 sm:px-2.5 py-1.5">
+                <Globe className="w-3.5 h-3.5 text-emerald-400 mr-1 sm:mr-1.5 shrink-0" />
                 <select
                   aria-label="Select Currency"
                   value={activeCurrency}
                   onChange={(e) => handleCurrencyChange(e.target.value)}
-                  className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer pr-1"
+                  className="bg-transparent text-[11px] sm:text-xs font-bold text-white focus:outline-none cursor-pointer pr-0.5 sm:pr-1"
                 >
                   {SUPPORTED_CURRENCIES.map((c) => (
                     <option key={c.code} value={c.code} className="bg-slate-900 text-white">
@@ -836,34 +837,35 @@ export function DashboardPage() {
               <button
                 type="button"
                 onClick={signOut}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-500/15 hover:border-rose-500/40 hover:text-rose-300 border border-slate-800 text-xs font-semibold text-slate-300 transition-colors cursor-pointer"
+                title="Sign Out"
+                className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-900 hover:bg-rose-500/15 hover:border-rose-500/40 hover:text-rose-300 border border-slate-800 text-xs font-semibold text-slate-300 transition-colors cursor-pointer"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                 <span className="hidden sm:inline">Sign Out</span>
               </button>
             </div>
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 space-y-8">
+        <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-5 sm:pt-8 pb-8 lg:pb-12 space-y-6 sm:space-y-8">
           {/* =========================================================
               TAB 1: SIMPLE PULSE & OVERVIEW
              ========================================================= */}
           {activeTab === 'overview' && (
             <>
               {/* Hero Safe-to-Spend Pulse Banner */}
-              <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-950/70 via-slate-900 to-slate-900 border border-emerald-500/30 p-6 sm:p-8 shadow-xl">
+              <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div className="lg:col-span-2 relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-emerald-950/70 via-slate-900 to-slate-900 border border-emerald-500/30 p-5 sm:p-8 shadow-xl">
                   <div className="absolute -right-12 -top-12 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
                     <div>
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-3">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        Safe-to-Spend Today • {daysRemaining} days left in month
+                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] sm:text-xs font-semibold mb-2.5 sm:mb-3">
+                        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                        Safe-to-Spend Today • {daysRemaining} days left
                       </div>
-                      <div className="text-4xl sm:text-5xl font-black tracking-tight text-white">
+                      <div className="text-3xl sm:text-5xl font-black tracking-tight text-white">
                         {fmt(safeToSpendToday)}
-                        <span className="text-base font-medium text-slate-400 ml-2">/ day</span>
+                        <span className="text-sm sm:text-base font-medium text-slate-400 ml-1.5 sm:ml-2">/ day</span>
                       </div>
                       <p className="text-xs sm:text-sm text-slate-400 mt-2 max-w-lg">
                         Calculated after setting aside{' '}
@@ -943,19 +945,19 @@ export function DashboardPage() {
                 </div>
 
                 {/* 7-Day Cashflow Pulse */}
-                <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-6 flex flex-col justify-between">
+                <div className="rounded-2xl sm:rounded-3xl bg-slate-900/90 border border-slate-800 p-4 sm:p-6 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                        <PiggyBank className="w-4 h-4" />
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                        <PiggyBank className="w-4 h-4 shrink-0" />
                         7-Day Cashflow Pulse
                       </span>
-                      <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 font-semibold">
+                      <span className="text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 font-semibold whitespace-nowrap">
                         {last7DaysHeatmap.filter((d) => d.spentUsd === 0).length} Zero-Spend Days
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-7 gap-1.5 my-3">
+                    <div className="grid grid-cols-7 gap-1 sm:gap-1.5 my-3">
                       {last7DaysHeatmap.map((d) => {
                         const isZero = d.spentUsd === 0
                         const isHigh = d.spentUsd > safeToSpendToday && safeToSpendToday > 0
@@ -963,7 +965,7 @@ export function DashboardPage() {
                           <div
                             key={d.dateStr}
                             title={`${d.dateStr}: ${fmt(d.spentUsd)}`}
-                            className={`p-2 rounded-xl border text-center flex flex-col items-center justify-center ${
+                            className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl border text-center flex flex-col items-center justify-center ${
                               isZero
                                 ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
                                 : isHigh
@@ -971,8 +973,8 @@ export function DashboardPage() {
                                   : 'bg-amber-500/15 border-amber-500/40 text-amber-200'
                             }`}
                           >
-                            <span className="text-[10px] font-bold uppercase">{d.label}</span>
-                            <span className="text-[10px] mt-1 font-extrabold">
+                            <span className="text-[9px] sm:text-[10px] font-bold uppercase">{d.label}</span>
+                            <span className="text-[9px] sm:text-[10px] mt-0.5 sm:mt-1 font-extrabold truncate max-w-full">
                               {isZero ? '0' : fmt(d.spentUsd, 0)}
                             </span>
                           </div>
@@ -1016,24 +1018,24 @@ export function DashboardPage() {
               </section>
 
               {/* 1-CLICK QUICK-LOG ("ClickPads") */}
-              <section className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-amber-400" />
-                      1-Click Quick-Log (&ldquo;ClickPads&rdquo;)
+              <section className="space-y-3 sm:space-y-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <h2 className="text-base sm:text-xl font-bold text-white flex items-center gap-2">
+                      <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
+                      <span className="truncate">1-Click Quick-Log (&ldquo;ClickPads&rdquo;)</span>
                     </h2>
-                    <p className="text-xs text-slate-400">
-                      Tap once to log a daily expense in {activeCurrency}. Click the pencil icon on
-                      any button to edit or remove it.
+                    <p className="text-[11px] sm:text-xs text-slate-400">
+                      Tap once to log a daily expense in {activeCurrency}.
                     </p>
                   </div>
                   <button
                     onClick={openAddPadModal}
-                    className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-emerald-400 flex items-center gap-1.5 cursor-pointer"
+                    className="px-3 sm:px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-emerald-400 flex items-center gap-1.5 cursor-pointer shrink-0"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    New ClickPad
+                    <span className="hidden sm:inline">New ClickPad</span>
+                    <span className="sm:hidden">New</span>
                   </button>
                 </div>
 
@@ -1043,7 +1045,7 @@ export function DashboardPage() {
                     shortcuts!
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3.5">
                     {clickpads.map((pad) => (
                       <div
                         key={pad.id}
@@ -1053,29 +1055,29 @@ export function DashboardPage() {
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' || e.key === ' ') handleQuickClickPad(pad)
                         }}
-                        className="group relative text-left p-4 rounded-2xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/50 transition-all active:scale-95 cursor-pointer shadow-sm"
+                        className="group relative text-left p-3 sm:p-4 rounded-2xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/50 transition-all active:scale-95 cursor-pointer shadow-sm"
                       >
                         <button
                           type="button"
                           title="Edit ClickPad"
                           onClick={(e) => openEditPadModal(pad, e)}
-                          className="opacity-0 group-hover:opacity-100 absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-slate-950/90 hover:bg-slate-800 text-slate-400 hover:text-white transition-opacity cursor-pointer"
+                          className="opacity-80 sm:opacity-0 sm:group-hover:opacity-100 absolute top-2 right-2 p-1.5 rounded-lg bg-slate-950/90 hover:bg-slate-800 text-slate-400 hover:text-white transition-opacity cursor-pointer"
                         >
                           <Pencil className="w-3 h-3" />
                         </button>
 
-                        <div className="flex items-center justify-between mb-2.5">
-                          <span className="text-2xl group-hover:scale-110 transition-transform">
+                        <div className="flex items-center justify-between mb-2 pr-6 sm:pr-0">
+                          <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">
                             {pad.emoji}
                           </span>
-                          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                          <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
                             -{fmt(Number(pad.amount))}
                           </span>
                         </div>
-                        <div className="font-bold text-sm text-white truncate">{pad.label}</div>
-                        <div className="flex items-center justify-between mt-1 text-[11px] text-slate-500">
-                          <span>{pad.category}</span>
-                          <span>{pad.clicks_count} clicks</span>
+                        <div className="font-bold text-xs sm:text-sm text-white truncate">{pad.label}</div>
+                        <div className="flex items-center justify-between mt-1 text-[10px] sm:text-[11px] text-slate-500">
+                          <span className="truncate">{pad.category}</span>
+                          <span className="shrink-0 ml-1">{pad.clicks_count}×</span>
                         </div>
                       </div>
                     ))}
@@ -1415,17 +1417,17 @@ export function DashboardPage() {
                       return (
                         <div
                           key={tx.id}
-                          className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700 flex items-center justify-between gap-4"
+                          className="p-3 sm:p-4 rounded-2xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4"
                         >
-                          <div className="flex items-center gap-3.5 min-w-0">
-                            <div className="w-11 h-11 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-xl shrink-0">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-lg sm:text-xl shrink-0">
                               {tx.emoji}
                             </div>
-                            <div className="min-w-0">
+                            <div className="min-w-0 flex-1">
                               <div className="font-bold text-sm sm:text-base text-white truncate">
                                 {tx.title}
                               </div>
-                              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-400">
                                 <span>{tx.category}</span>
                                 <span>•</span>
                                 <span>
@@ -1438,7 +1440,7 @@ export function DashboardPage() {
                                     : 'Today'}
                                 </span>
                                 {hasDifferentOriginalCurrency && (
-                                  <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-amber-300 font-semibold">
+                                  <span className="px-1.5 sm:px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-amber-300 font-semibold">
                                     Logged as{' '}
                                     {formatMoney(
                                       Number(tx.original_amount),
@@ -1448,14 +1450,14 @@ export function DashboardPage() {
                                 )}
                               </div>
                               {tx.notes && (
-                                <p className="text-xs text-slate-500 mt-0.5">{tx.notes}</p>
+                                <p className="text-xs text-slate-500 mt-0.5 truncate">{tx.notes}</p>
                               )}
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-2 shrink-0">
+                          <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 pl-12 sm:pl-0">
                             <span
-                              className={`font-extrabold text-base mr-2 ${
+                              className={`font-extrabold text-sm sm:text-base mr-1 sm:mr-2 ${
                                 isIncome ? 'text-emerald-400' : 'text-rose-400'
                               }`}
                             >
@@ -1463,21 +1465,24 @@ export function DashboardPage() {
                               {fmt(Number(tx.amount))}
                             </span>
 
-                            <button
-                              type="button"
-                              onClick={() => openEditTransactionModal(tx)}
-                              className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-500/20 text-xs font-semibold text-slate-300 hover:text-emerald-300 flex items-center gap-1 cursor-pointer"
-                            >
-                              <Pencil className="w-3.5 h-3.5" />
-                              Edit
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteTx(tx)}
-                              className="p-2 rounded-xl bg-slate-900 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 cursor-pointer"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => openEditTransactionModal(tx)}
+                                className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-500/20 text-xs font-semibold text-slate-300 hover:text-emerald-300 flex items-center gap-1 cursor-pointer"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteTx(tx)}
+                                aria-label="Delete transaction"
+                                className="p-2 rounded-xl bg-slate-900 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 cursor-pointer"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       )
@@ -1625,16 +1630,56 @@ export function DashboardPage() {
       </div>
 
       {/* COPYRIGHT FOOTER */}
-      <footer className="border-t border-slate-900 bg-slate-950/90 py-6 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+      <footer className="border-t border-slate-900 bg-slate-950/90 py-6 pb-24 lg:pb-6 mt-8 sm:mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3 text-xs text-slate-500 text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <Coins className="w-4 h-4 text-emerald-400" />
+            <Coins className="w-4 h-4 text-emerald-400 shrink-0" />
             <span className="font-bold text-slate-300">KoinCLICK</span>
             <span>— Simple Multi-Currency Budget Manager</span>
           </div>
           <div>© {new Date().getFullYear()} KoinCLICK. All rights reserved.</div>
         </div>
       </footer>
+
+      {/* MOBILE BOTTOM NAVIGATION BAR */}
+      <nav
+        aria-label="Mobile Navigation"
+        className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/90 px-2 py-1.5 flex items-center justify-around"
+      >
+        {(
+          [
+            { id: 'overview', label: 'Overview', icon: BarChart3, count: null },
+            { id: 'transactions', label: 'Transactions', icon: Receipt, count: transactions.length },
+            { id: 'radar', label: 'Subs', icon: Calendar, count: subscriptions.length },
+            ...(isAdmin ? ([{ id: 'admin', label: 'Admin', icon: Shield, count: null }] as const) : []),
+          ] as const
+        ).map((item) => {
+          const Icon = item.icon
+          const active = activeTab === item.id
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setActiveTab(item.id)}
+              className={`relative flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl min-w-[64px] transition-all cursor-pointer ${
+                active
+                  ? 'text-emerald-400 bg-emerald-500/10'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <div className="relative">
+                <Icon className="w-5 h-5" />
+                {item.count !== null && item.count > 0 && (
+                  <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-emerald-500 text-slate-950 text-[9px] font-extrabold flex items-center justify-center">
+                    {item.count > 99 ? '99+' : item.count}
+                  </span>
+                )}
+              </div>
+              <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
+            </button>
+          )
+        })}
+      </nav>
 
       {/* MODAL 0: Start From Zero / Reset Confirmation Modal */}
       {showResetModal && (
