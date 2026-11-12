@@ -73,3 +73,31 @@ export interface KoinSubscription {
   billing_day: number
   status: 'active' | 'cancel_alert' | 'paused'
 }
+
+export type AiProvider = 'gemini' | 'openai' | 'anthropic' | 'groq' | 'openrouter' | 'custom'
+
+export interface KoinAiModel {
+  id: number
+  user_id: string
+  name: string
+  provider: AiProvider
+  model_id: string
+  api_key: string
+  base_url?: string | null
+  is_active: boolean
+  is_default: boolean
+  monthly_budget: number
+  current_spend: number
+  created_at?: string
+}
+
+export interface KoinAiBudget {
+  id: number
+  user_id: string
+  category: string
+  monthly_limit: number
+  ai_recommended_limit?: number | null
+  alert_threshold: number
+  ai_notes?: string | null
+  updated_at?: string
+}

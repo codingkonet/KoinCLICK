@@ -5,6 +5,8 @@ import {
   type KoinClickPad,
   type KoinTransaction,
   type KoinSubscription,
+  type KoinAiModel,
+  type KoinAiBudget,
 } from '../lib/supabase'
 import {
   SUPPORTED_CURRENCIES,
@@ -16,6 +18,7 @@ import { compressImageToDataUrl } from '../lib/imageUtils'
 import { useAuth } from '../context/AuthContext'
 import { ensureStarterData } from '../lib/seedUserData'
 import { AdminControlPanel } from '../components/AdminControlPanel'
+import { AiBudgetPanel } from '../components/AiBudgetPanel'
 import {
   Coins,
   Zap,
@@ -70,8 +73,10 @@ export function DashboardPage() {
   const [clickpads, setClickpads] = useState<KoinClickPad[]>([])
   const [transactions, setTransactions] = useState<KoinTransaction[]>([])
   const [subscriptions, setSubscriptions] = useState<KoinSubscription[]>([])
+  const [aiModels, setAiModels] = useState<KoinAiModel[]>([])
+  const [aiBudgets, setAiBudgets] = useState<KoinAiBudget[]>([])
   const [toast, setToast] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<'overview' | 'transactions' | 'radar' | 'admin'>(
+  const [activeTab, setActiveTab] = useState<'overview' | 'transactions' | 'radar' | 'ai' | 'admin'>(
     'overview'
   )
 
@@ -157,7 +162,7 @@ export function DashboardPage() {
       user.user_metadata?.full_name || user.email?.split('@')[0] || 'Koin Master'
     )
 
-    const [settingsRes, padsRes, txRes, subsRes] = await Promise.all([
+    const [settingsRes, padsRes, txRes, subsRes, aiModelsRes, aiBudgetsRes] = await Promise.all([
       supabase.from('koinclick_settings').select('*').eq('user_id', user.id).single(),
       supabase.from('koinclick_clickpads').select('*').eq('user_id', user.id).order('id'),
       supabase
@@ -171,6 +176,16 @@ export function DashboardPage() {
         .select('*')
         .eq('user_id', user.id)
         .order('billing_day'),
+      supabase
+        .from('koinclick_ai_models')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('koinclick_ai_budgets')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('category'),
     ])
 
     if (settingsRes.data) {
@@ -185,6 +200,8 @@ export function DashboardPage() {
     if (padsRes.data) setClickpads(padsRes.data)
     if (txRes.data) setTransactions(txRes.data)
     if (subsRes.data) setSubscriptions(subsRes.data)
+    if (aiModelsRes.data) setAiModels(aiModelsRes.data)
+    if (aiBudgetsRes.data) setAiBudgets(aiBudgetsRes.data)
 
     setLoading(false)
   }, [user])
@@ -894,6 +911,7 @@ export function DashboardPage() {
                   { id: 'overview', label: 'Pulse & Overview' },
                   { id: 'transactions', label: `Transactions (${transactions.length})` },
                   { id: 'radar', label: `Subscriptions (${subscriptions.length})` },
+                  { id: 'ai', label: 'AI Budget' },
                   ...(isAdmin ? ([{ id: 'admin', label: 'Admin Control' }] as const) : []),
                 ] as const
               ).map((tab) => (
@@ -1762,6 +1780,23 @@ export function DashboardPage() {
           )}
 
           {/* =========================================================
+              TAB 3.5: AI BUDGET MANAGEMENT & USER MODEL APIS
+             ========================================================= */}
+          {activeTab === 'ai' && user && settings && (
+            <AiBudgetPanel
+              userId={user.id}
+              settings={settings}
+              transactions={transactions}
+              subscriptions={subscriptions}
+              aiModels={aiModels}
+              setAiModels={setAiModels}
+              aiBudgets={aiBudgets}
+              setAiBudgets={setAiBudgets}
+              formatMoney={(amt) => fmt(amt)}
+            />
+          )}
+
+          {/* =========================================================
               TAB 4: ADMIN CONTROL CENTER (Restricted strictly to ouagrani.me@gmail.com)
              ========================================================= */}
           {activeTab === 'admin' && isAdmin && user && (
@@ -1805,6 +1840,12 @@ export function DashboardPage() {
             { id: 'overview', label: 'Overview', icon: BarChart3, count: null },
             { id: 'transactions', label: 'Transactions', icon: Receipt, count: transactions.length },
             { id: 'radar', label: 'Subs', icon: Calendar, count: subscriptions.length },
+            {
+              id: 'ai',
+              label: 'AI Budget',
+              icon: Sparkles,
+              count: aiModels.filter((m) => m.is_active).length || null,
+            },
             ...(isAdmin ? ([{ id: 'admin', label: 'Admin', icon: Shield, count: null }] as const) : []),
           ] as const
         ).map((item) => {
