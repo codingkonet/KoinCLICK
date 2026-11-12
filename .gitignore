@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vercel/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+windows-app/bin/
+windows-app/obj/
+*.log
