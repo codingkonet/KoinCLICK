@@ -844,38 +844,38 @@ export function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-4">
-        <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center animate-spin">
-          <RefreshCw className="w-6 h-6 text-emerald-400" />
+      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center gap-4">
+        <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center animate-spin">
+          <RefreshCw className="w-6 h-6 text-indigo-400" />
         </div>
-        <p className="text-sm text-slate-400">Loading your KoinCLICK workspace...</p>
+        <p className="text-sm text-zinc-400">Loading your KoinCLICK workspace...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col justify-between">
       <div>
         {/* Floating Toast Notification */}
         {toast && (
-          <div className="fixed bottom-20 lg:bottom-6 inset-x-4 sm:inset-x-auto sm:right-6 z-50 flex items-center justify-center sm:justify-start gap-2.5 px-4 py-3 rounded-2xl bg-emerald-500 text-slate-950 font-bold text-xs sm:text-sm shadow-2xl shadow-emerald-500/30 animate-bounce">
+          <div className="fixed bottom-20 lg:bottom-6 inset-x-4 sm:inset-x-auto sm:right-6 z-50 flex items-center justify-center sm:justify-start gap-2.5 px-4 py-3 rounded-2xl bg-indigo-500 text-white font-bold text-xs sm:text-sm shadow-2xl shadow-indigo-500/30 animate-bounce">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span className="truncate">{toast}</span>
           </div>
         )}
 
         {/* Top Navigation Bar */}
-        <header className="sticky top-0 z-30 backdrop-blur-xl bg-slate-950/90 border-b border-slate-800/80">
+        <header className="sticky top-0 z-30 backdrop-blur-xl bg-zinc-950/90 border-b border-zinc-800/80">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0">
-                <Coins className="w-4 h-4 sm:w-5 sm:h-5 text-slate-950" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center shadow-md shadow-indigo-500/20 shrink-0">
+                <Coins className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                 <span className="text-lg sm:text-xl font-extrabold tracking-tight text-white truncate">
-                  Koin<span className="text-emerald-400">CLICK</span>
+                  Koin<span className="text-indigo-400">CLICK</span>
                 </span>
-                <span className="hidden md:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-900 border border-slate-700 text-slate-300 truncate max-w-[140px]">
+                <span className="hidden md:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-300 truncate max-w-[140px]">
                   {settings?.display_name || user?.email}
                 </span>
                 {isAdmin && (
@@ -888,7 +888,7 @@ export function DashboardPage() {
             </div>
 
             {/* Desktop Top Navigation Menu (Without Jars) */}
-            <nav className="hidden lg:flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
+            <nav className="hidden lg:flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
               {(
                 [
                   { id: 'overview', label: 'Pulse & Overview' },
@@ -903,8 +903,8 @@ export function DashboardPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                     activeTab === tab.id
-                      ? 'bg-emerald-500 text-slate-950 shadow-sm'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-indigo-500 text-white shadow-sm'
+                      : 'text-zinc-400 hover:text-white'
                   }`}
                 >
                   {tab.label}
@@ -925,8 +925,8 @@ export function DashboardPage() {
               </button>
 
               {/* Multi-Currency Selector */}
-              <div className="relative flex items-center bg-slate-900 border border-slate-800 hover:border-emerald-500/40 rounded-xl px-2 sm:px-2.5 py-1.5">
-                <Globe className="w-3.5 h-3.5 text-emerald-400 mr-1 sm:mr-1.5 shrink-0" />
+              <div className="relative flex items-center bg-zinc-900 border border-zinc-800 hover:border-indigo-500/40 rounded-xl px-2 sm:px-2.5 py-1.5">
+                <Globe className="w-3.5 h-3.5 text-indigo-400 mr-1 sm:mr-1.5 shrink-0" />
                 <select
                   aria-label="Select Currency"
                   value={activeCurrency}
@@ -934,7 +934,7 @@ export function DashboardPage() {
                   className="bg-transparent text-[11px] sm:text-xs font-bold text-white focus:outline-none cursor-pointer pr-0.5 sm:pr-1"
                 >
                   {SUPPORTED_CURRENCIES.map((c) => (
-                    <option key={c.code} value={c.code} className="bg-slate-900 text-white">
+                    <option key={c.code} value={c.code} className="bg-zinc-900 text-white">
                       {c.flag} {c.code} ({c.symbol})
                     </option>
                   ))}
@@ -951,7 +951,7 @@ export function DashboardPage() {
                   setShowSettingsModal(true)
                 }}
                 title="Budget & Currency Settings"
-                className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 cursor-pointer"
+                className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 cursor-pointer"
               >
                 <Settings className="w-4 h-4" />
               </button>
@@ -960,7 +960,7 @@ export function DashboardPage() {
                 type="button"
                 onClick={signOut}
                 title="Sign Out"
-                className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-900 hover:bg-rose-500/15 hover:border-rose-500/40 hover:text-rose-300 border border-slate-800 text-xs font-semibold text-slate-300 transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl bg-zinc-900 hover:bg-rose-500/15 hover:border-rose-500/40 hover:text-rose-300 border border-zinc-800 text-xs font-semibold text-zinc-300 transition-colors cursor-pointer"
               >
                 <LogOut className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                 <span className="hidden sm:inline">Sign Out</span>
@@ -977,23 +977,23 @@ export function DashboardPage() {
             <>
               {/* Hero Safe-to-Spend Pulse Banner */}
               <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-                <div className="lg:col-span-2 relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-emerald-950/70 via-slate-900 to-slate-900 border border-emerald-500/30 p-5 sm:p-8 shadow-xl">
-                  <div className="absolute -right-12 -top-12 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="lg:col-span-2 relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-950/70 via-zinc-900 to-zinc-900 border border-indigo-500/30 p-5 sm:p-8 shadow-xl">
+                  <div className="absolute -right-12 -top-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
                     <div>
-                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] sm:text-xs font-semibold mb-2.5 sm:mb-3">
+                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-[11px] sm:text-xs font-semibold mb-2.5 sm:mb-3">
                         <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
                         Safe-to-Spend Today • {daysRemaining} days left
                       </div>
                       <div className="text-3xl sm:text-5xl font-black tracking-tight text-white">
                         {fmt(safeToSpendToday)}
-                        <span className="text-sm sm:text-base font-medium text-slate-400 ml-1.5 sm:ml-2">/ day</span>
+                        <span className="text-sm sm:text-base font-medium text-zinc-400 ml-1.5 sm:ml-2">/ day</span>
                       </div>
-                      <p className="text-xs sm:text-sm text-slate-400 mt-2 max-w-lg">
+                      <p className="text-xs sm:text-sm text-zinc-400 mt-2 max-w-lg">
                         Calculated after setting aside{' '}
-                        <span className="text-slate-200 font-semibold">{fmt(fixedBills, 0)}</span>{' '}
+                        <span className="text-zinc-200 font-semibold">{fmt(fixedBills, 0)}</span>{' '}
                         for fixed bills,{' '}
-                        <span className="text-emerald-300 font-semibold">
+                        <span className="text-indigo-300 font-semibold">
                           {fmt(savingsGoal, 0)}
                         </span>{' '}
                         for savings, and{' '}
@@ -1008,7 +1008,7 @@ export function DashboardPage() {
                       <div className="grid grid-cols-2 sm:flex sm:flex-col gap-2">
                         <button
                           onClick={() => openAddTransactionModal('expense')}
-                          className="px-4 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer transition-all"
+                          className="px-4 py-3 rounded-2xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 cursor-pointer transition-all"
                         >
                           <Plus className="w-4 h-4 shrink-0" />
                           <span>Add Expense</span>
@@ -1040,9 +1040,9 @@ export function DashboardPage() {
                   </div>
 
                   {/* Mini KPI Strip */}
-                  <div className="mt-6 pt-6 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="mt-6 pt-6 border-t border-zinc-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div>
-                      <span className="text-[11px] uppercase tracking-wider text-slate-400 block">
+                      <span className="text-[11px] uppercase tracking-wider text-zinc-400 block">
                         Total Monthly Income
                       </span>
                       <span className="text-lg font-extrabold text-white">
@@ -1050,15 +1050,15 @@ export function DashboardPage() {
                       </span>
                     </div>
                     <div>
-                      <span className="text-[11px] uppercase tracking-wider text-slate-400 block">
+                      <span className="text-[11px] uppercase tracking-wider text-zinc-400 block">
                         Remaining Budget
                       </span>
-                      <span className="text-lg font-extrabold text-emerald-400">
+                      <span className="text-lg font-extrabold text-indigo-400">
                         {fmt(remainingFlexible)}
                       </span>
                     </div>
                     <div>
-                      <span className="text-[11px] uppercase tracking-wider text-slate-400 block">
+                      <span className="text-[11px] uppercase tracking-wider text-zinc-400 block">
                         Total Expenses
                       </span>
                       <span className="text-lg font-extrabold text-rose-400">
@@ -1066,7 +1066,7 @@ export function DashboardPage() {
                       </span>
                     </div>
                     <div>
-                      <span className="text-[11px] uppercase tracking-wider text-slate-400 block">
+                      <span className="text-[11px] uppercase tracking-wider text-zinc-400 block">
                         Monthly Savings Goal
                       </span>
                       <span className="text-lg font-extrabold text-purple-300">
@@ -1077,14 +1077,14 @@ export function DashboardPage() {
                 </div>
 
                 {/* 7-Day Cashflow Pulse */}
-                <div className="rounded-2xl sm:rounded-3xl bg-slate-900/90 border border-slate-800 p-4 sm:p-6 flex flex-col justify-between">
+                <div className="rounded-2xl sm:rounded-3xl bg-zinc-900/90 border border-zinc-800 p-4 sm:p-6 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-3">
                       <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
                         <PiggyBank className="w-4 h-4 shrink-0" />
                         7-Day Cashflow Pulse
                       </span>
-                      <span className="text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 font-semibold whitespace-nowrap">
+                      <span className="text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 font-semibold whitespace-nowrap">
                         {last7DaysHeatmap.filter((d) => d.spentUsd === 0).length} Zero-Spend Days
                       </span>
                     </div>
@@ -1099,7 +1099,7 @@ export function DashboardPage() {
                             title={`${d.dateStr}: ${fmt(d.spentUsd)}`}
                             className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl border text-center flex flex-col items-center justify-center ${
                               isZero
-                                ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
+                                ? 'bg-indigo-500/15 border-indigo-500/40 text-indigo-300'
                                 : isHigh
                                   ? 'bg-rose-500/15 border-rose-500/40 text-rose-300'
                                   : 'bg-amber-500/15 border-amber-500/40 text-amber-200'
@@ -1117,8 +1117,8 @@ export function DashboardPage() {
 
                   <div className="mt-4 space-y-2.5">
                     <div className="flex justify-between text-xs">
-                      <span className="text-slate-400">Projected Month-End Surplus</span>
-                      <span className="font-bold text-emerald-400">
+                      <span className="text-zinc-400">Projected Month-End Surplus</span>
+                      <span className="font-bold text-indigo-400">
                         {fmt(
                           Math.max(
                             0,
@@ -1127,9 +1127,9 @@ export function DashboardPage() {
                         )}
                       </span>
                     </div>
-                    <div className="w-full h-3 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
+                    <div className="w-full h-3 rounded-full bg-zinc-950 overflow-hidden border border-zinc-800">
                       <div
-                        className="h-full bg-gradient-to-r from-emerald-500 via-amber-400 to-rose-500 transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-indigo-500 via-amber-400 to-rose-500 transition-all duration-500"
                         style={{
                           width: `${
                             flexiblePool > 0
@@ -1139,7 +1139,7 @@ export function DashboardPage() {
                         }}
                       />
                     </div>
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                    <div className="flex items-center justify-between text-[11px] text-zinc-500 pt-1">
                       <span>
                         Currency: {getCurrencyInfo(activeCurrency).flag} {activeCurrency}
                       </span>
@@ -1157,13 +1157,13 @@ export function DashboardPage() {
                       <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
                       <span className="truncate">1-Click Quick-Log (&ldquo;ClickPads&rdquo;)</span>
                     </h2>
-                    <p className="text-[11px] sm:text-xs text-slate-400">
+                    <p className="text-[11px] sm:text-xs text-zinc-400">
                       Tap once to log a daily expense in {activeCurrency}.
                     </p>
                   </div>
                   <button
                     onClick={openAddPadModal}
-                    className="px-3 sm:px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-emerald-400 flex items-center gap-1.5 cursor-pointer shrink-0"
+                    className="px-3 sm:px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-semibold text-indigo-400 flex items-center gap-1.5 cursor-pointer shrink-0"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">New ClickPad</span>
@@ -1172,7 +1172,7 @@ export function DashboardPage() {
                 </div>
 
                 {clickpads.length === 0 ? (
-                  <div className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800 text-center text-xs text-slate-400">
+                  <div className="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800 text-center text-xs text-zinc-400">
                     No ClickPads yet. Click &ldquo;+ New ClickPad&rdquo; to create 1-click expense
                     shortcuts!
                   </div>
@@ -1187,13 +1187,13 @@ export function DashboardPage() {
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' || e.key === ' ') handleQuickClickPad(pad)
                         }}
-                        className="group relative text-left p-3 sm:p-4 rounded-2xl bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/50 transition-all active:scale-95 cursor-pointer shadow-sm"
+                        className="group relative text-left p-3 sm:p-4 rounded-2xl bg-zinc-900/90 hover:bg-zinc-900 border border-zinc-800 hover:border-indigo-500/50 transition-all active:scale-95 cursor-pointer shadow-sm"
                       >
                         <button
                           type="button"
                           title="Edit ClickPad"
                           onClick={(e) => openEditPadModal(pad, e)}
-                          className="opacity-80 sm:opacity-0 sm:group-hover:opacity-100 absolute top-2 right-2 p-1.5 rounded-lg bg-slate-950/90 hover:bg-slate-800 text-slate-400 hover:text-white transition-opacity cursor-pointer"
+                          className="opacity-80 sm:opacity-0 sm:group-hover:opacity-100 absolute top-2 right-2 p-1.5 rounded-lg bg-zinc-950/90 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-opacity cursor-pointer"
                         >
                           <Pencil className="w-3 h-3" />
                         </button>
@@ -1202,12 +1202,12 @@ export function DashboardPage() {
                           <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">
                             {pad.emoji}
                           </span>
-                          <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                          <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
                             -{fmt(Number(pad.amount))}
                           </span>
                         </div>
                         <div className="font-bold text-xs sm:text-sm text-white truncate">{pad.label}</div>
-                        <div className="flex items-center justify-between mt-1 text-[10px] sm:text-[11px] text-slate-500">
+                        <div className="flex items-center justify-between mt-1 text-[10px] sm:text-[11px] text-zinc-500">
                           <span className="truncate">{pad.category}</span>
                           <span className="shrink-0 ml-1">{pad.clicks_count}×</span>
                         </div>
@@ -1221,14 +1221,14 @@ export function DashboardPage() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Left 7 Columns: Recent Transactions */}
                 <div className="lg:col-span-7">
-                  <div className="rounded-3xl bg-slate-900/70 border border-slate-800/90 p-6 space-y-4">
+                  <div className="rounded-3xl bg-zinc-900/70 border border-zinc-800/90 p-6 space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="text-lg font-bold text-white flex items-center gap-2">
                           <Receipt className="w-5 h-5 text-sky-400" />
                           Recent Transactions ({transactions.length})
                         </h3>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-zinc-400">
                           Click any transaction’s pencil icon to edit its amount, currency, or date.
                         </p>
                       </div>
@@ -1244,7 +1244,7 @@ export function DashboardPage() {
                         )}
                         <button
                           onClick={() => openAddTransactionModal('expense')}
-                          className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-xs font-bold text-slate-950 flex items-center gap-1 cursor-pointer"
+                          className="px-3 py-1.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-xs font-bold text-white flex items-center gap-1 cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           Add Tx
@@ -1254,10 +1254,10 @@ export function DashboardPage() {
 
                     {transactions.length === 0 ? (
                       <div className="py-12 text-center space-y-2">
-                        <p className="text-sm font-semibold text-slate-300">
+                        <p className="text-sm font-semibold text-zinc-300">
                           0 Transactions — Clean Slate!
                         </p>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-zinc-500">
                           Click &ldquo;+ Add Tx&rdquo; or tap any ClickPad above to log your first
                           transaction.
                         </p>
@@ -1269,17 +1269,17 @@ export function DashboardPage() {
                           return (
                             <div
                               key={tx.id}
-                              className="p-3.5 rounded-2xl bg-slate-950/90 border border-slate-800/80 flex items-center justify-between gap-3"
+                              className="p-3.5 rounded-2xl bg-zinc-950/90 border border-zinc-800/80 flex items-center justify-between gap-3"
                             >
                               <div className="flex items-center gap-3 min-w-0">
-                                <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-lg shrink-0">
+                                <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-lg shrink-0">
                                   {tx.emoji}
                                 </div>
                                 <div className="min-w-0">
                                   <div className="font-bold text-sm text-white truncate">
                                     {tx.title}
                                   </div>
-                                  <div className="text-[11px] text-slate-500 flex flex-wrap items-center gap-1.5">
+                                  <div className="text-[11px] text-zinc-500 flex flex-wrap items-center gap-1.5">
                                     <span>
                                       {tx.category} •{' '}
                                       {tx.tx_date
@@ -1306,7 +1306,7 @@ export function DashboardPage() {
                               <div className="flex items-center gap-1.5 shrink-0">
                                 <span
                                   className={`font-extrabold text-sm mr-1 ${
-                                    isIncome ? 'text-emerald-400' : 'text-rose-400'
+                                    isIncome ? 'text-indigo-400' : 'text-rose-400'
                                   }`}
                                 >
                                   {isIncome ? '+' : '-'}
@@ -1316,7 +1316,7 @@ export function DashboardPage() {
                                   type="button"
                                   onClick={() => openEditTransactionModal(tx)}
                                   title="Edit transaction"
-                                  className="p-1.5 rounded-lg bg-slate-900 hover:bg-emerald-500/20 text-slate-400 hover:text-emerald-300 cursor-pointer"
+                                  className="p-1.5 rounded-lg bg-zinc-900 hover:bg-indigo-500/20 text-zinc-400 hover:text-indigo-300 cursor-pointer"
                                 >
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
@@ -1324,7 +1324,7 @@ export function DashboardPage() {
                                   type="button"
                                   onClick={() => handleDeleteTx(tx)}
                                   title="Delete transaction"
-                                  className="p-1.5 rounded-lg bg-slate-900 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 cursor-pointer"
+                                  className="p-1.5 rounded-lg bg-zinc-900 hover:bg-rose-500/20 text-zinc-400 hover:text-rose-400 cursor-pointer"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
@@ -1335,7 +1335,7 @@ export function DashboardPage() {
                         {transactions.length > 12 && (
                           <button
                             onClick={() => setActiveTab('transactions')}
-                            className="w-full py-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-emerald-400 cursor-pointer"
+                            className="w-full py-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-xs font-semibold text-indigo-400 cursor-pointer"
                           >
                             View All {transactions.length} Transactions →
                           </button>
@@ -1348,13 +1348,13 @@ export function DashboardPage() {
                 {/* Right 5 Columns: Category Analytics + Subscriptions Summary */}
                 <div className="lg:col-span-5 space-y-6">
                   {/* Top Categories */}
-                  <div className="rounded-3xl bg-slate-900/70 border border-slate-800/90 p-6 space-y-4">
+                  <div className="rounded-3xl bg-zinc-900/70 border border-zinc-800/90 p-6 space-y-4">
                     <h3 className="text-lg font-bold text-white flex items-center gap-2">
                       <BarChart3 className="w-5 h-5 text-sky-400" />
                       Spending by Category
                     </h3>
                     {categoryBreakdown.length === 0 ? (
-                      <p className="text-xs text-slate-500 py-4">
+                      <p className="text-xs text-zinc-500 py-4">
                         All transactions are at zero. Add an expense to see category analytics.
                       </p>
                     ) : (
@@ -1362,15 +1362,15 @@ export function DashboardPage() {
                         {categoryBreakdown.map((item) => (
                           <div key={item.category} className="space-y-1">
                             <div className="flex justify-between text-xs">
-                              <span className="font-semibold text-slate-200">{item.category}</span>
-                              <span className="text-slate-400">
+                              <span className="font-semibold text-zinc-200">{item.category}</span>
+                              <span className="text-zinc-400">
                                 <strong className="text-white">{fmt(item.amountUsd)}</strong> (
                                 {item.pct}%)
                               </span>
                             </div>
-                            <div className="w-full h-2 rounded-full bg-slate-950 overflow-hidden">
+                            <div className="w-full h-2 rounded-full bg-zinc-950 overflow-hidden">
                               <div
-                                className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-sky-400"
+                                className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-sky-400"
                                 style={{ width: `${item.pct}%` }}
                               />
                             </div>
@@ -1381,29 +1381,29 @@ export function DashboardPage() {
                   </div>
 
                   {/* Subscriptions Quick View */}
-                  <div className="rounded-3xl bg-slate-900/70 border border-slate-800/90 p-6 space-y-4">
+                  <div className="rounded-3xl bg-zinc-900/70 border border-zinc-800/90 p-6 space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="text-lg font-bold text-white flex items-center gap-2">
                           <Calendar className="w-5 h-5 text-amber-400" />
                           Subscriptions ({subscriptions.length})
                         </h3>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-zinc-400">
                           Monthly recurring: <strong className="text-amber-300">{fmt(totalSubsMonthly)}/mo</strong>
                         </p>
                       </div>
                       <button
                         onClick={openAddSubModal}
-                        className="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-emerald-400 cursor-pointer"
+                        className="px-3 py-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-xs font-semibold text-indigo-400 cursor-pointer"
                       >
                         + Add Sub
                       </button>
                     </div>
 
                     {subscriptions.length === 0 ? (
-                      <p className="text-xs text-slate-500 py-4">No active subscriptions.</p>
+                      <p className="text-xs text-zinc-500 py-4">No active subscriptions.</p>
                     ) : (
-                      <div className="divide-y divide-slate-800/70">
+                      <div className="divide-y divide-zinc-800/70">
                         {subscriptions.slice(0, 5).map((sub) => (
                           <div
                             key={sub.id}
@@ -1415,7 +1415,7 @@ export function DashboardPage() {
                                 <div className="font-bold text-xs sm:text-sm text-white">
                                   {sub.name}
                                 </div>
-                                <span className="text-[11px] text-slate-500">
+                                <span className="text-[11px] text-zinc-500">
                                   Day {sub.billing_day}
                                 </span>
                               </div>
@@ -1427,7 +1427,7 @@ export function DashboardPage() {
                               <button
                                 type="button"
                                 onClick={() => openEditSubModal(sub)}
-                                className="p-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
+                                className="p-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-zinc-400 hover:text-white cursor-pointer"
                               >
                                 <Pencil className="w-3 h-3" />
                               </button>
@@ -1453,7 +1453,7 @@ export function DashboardPage() {
                     <Receipt className="w-6 h-6 text-sky-400" />
                     Transactions Ledger ({transactions.length})
                   </h1>
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-zinc-400">
                     Add, edit, filter, export, or reset all transactions to zero at any time.
                   </p>
                 </div>
@@ -1467,7 +1467,7 @@ export function DashboardPage() {
                   </button>
                   <button
                     onClick={handleExportCsv}
-                    className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                     Export CSV
@@ -1480,7 +1480,7 @@ export function DashboardPage() {
                   </button>
                   <button
                     onClick={() => openAddTransactionModal('expense')}
-                    className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />+ Add Expense
                   </button>
@@ -1489,20 +1489,20 @@ export function DashboardPage() {
 
               {/* Summary KPI Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-xs text-slate-400">Logged Income</span>
-                  <div className="text-2xl font-black text-emerald-400 mt-1">
+                <div className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+                  <span className="text-xs text-zinc-400">Logged Income</span>
+                  <div className="text-2xl font-black text-indigo-400 mt-1">
                     +{fmt(extraIncomeLogged)}
                   </div>
                 </div>
-                <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-xs text-slate-400">Logged Expenses</span>
+                <div className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+                  <span className="text-xs text-zinc-400">Logged Expenses</span>
                   <div className="text-2xl font-black text-rose-400 mt-1">
                     -{fmt(totalExpensesLogged)}
                   </div>
                 </div>
-                <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-xs text-slate-400">Net Activity Balance</span>
+                <div className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+                  <span className="text-xs text-zinc-400">Net Activity Balance</span>
                   <div className="text-2xl font-black text-white mt-1">
                     {fmt(extraIncomeLogged - totalExpensesLogged)}
                   </div>
@@ -1510,20 +1510,20 @@ export function DashboardPage() {
               </div>
 
               {/* Search & Filters */}
-              <div className="rounded-3xl bg-slate-900/70 border border-slate-800 p-6 space-y-5">
+              <div className="rounded-3xl bg-zinc-900/70 border border-zinc-800 p-6 space-y-5">
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
                   <div className="relative flex-1">
-                    <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -tranzinc-y-1/2" />
                     <input
                       type="text"
                       placeholder="Search transactions by title, category, or notes..."
                       value={txSearch}
                       onChange={(e) => setTxSearch(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-indigo-500"
                     />
                   </div>
 
-                  <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                  <div className="flex items-center gap-1 bg-zinc-950 p-1 rounded-xl border border-zinc-800">
                     {(['all', 'expense', 'income'] as const).map((t) => (
                       <button
                         key={t}
@@ -1531,8 +1531,8 @@ export function DashboardPage() {
                         onClick={() => setTxFilterType(t)}
                         className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize cursor-pointer ${
                           txFilterType === t
-                            ? 'bg-emerald-500 text-slate-950'
-                            : 'text-slate-400 hover:text-white'
+                            ? 'bg-indigo-500 text-white'
+                            : 'text-zinc-400 hover:text-white'
                         }`}
                       >
                         {t}
@@ -1543,8 +1543,8 @@ export function DashboardPage() {
 
                 {filteredTransactions.length === 0 ? (
                   <div className="py-12 text-center space-y-3">
-                    <p className="text-base font-bold text-slate-300">No Transactions Found</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-base font-bold text-zinc-300">No Transactions Found</p>
+                    <p className="text-xs text-zinc-500">
                       Your transaction ledger is at zero. Click &ldquo;+ Add Expense&rdquo; or
                       &ldquo;+ Add Income&rdquo; to add a new entry.
                     </p>
@@ -1561,17 +1561,17 @@ export function DashboardPage() {
                       return (
                         <div
                           key={tx.id}
-                          className="p-3 sm:p-4 rounded-2xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4"
+                          className="p-3 sm:p-4 rounded-2xl bg-zinc-950/90 border border-zinc-800/80 hover:border-zinc-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4"
                         >
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-lg sm:text-xl shrink-0">
+                            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-lg sm:text-xl shrink-0">
                               {tx.emoji}
                             </div>
                             <div className="min-w-0 flex-1">
                               <div className="font-bold text-sm sm:text-base text-white truncate">
                                 {tx.title}
                               </div>
-                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-400">
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-zinc-400">
                                 <span>{tx.category}</span>
                                 <span>•</span>
                                 <span>
@@ -1584,7 +1584,7 @@ export function DashboardPage() {
                                     : 'Today'}
                                 </span>
                                 {hasDifferentOriginalCurrency && (
-                                  <span className="px-1.5 sm:px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-amber-300 font-semibold">
+                                  <span className="px-1.5 sm:px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-amber-300 font-semibold">
                                     Logged as{' '}
                                     {formatMoney(
                                       Number(tx.original_amount),
@@ -1604,7 +1604,7 @@ export function DashboardPage() {
                                 )}
                               </div>
                               {tx.notes && (
-                                <p className="text-xs text-slate-500 mt-0.5 truncate">{tx.notes}</p>
+                                <p className="text-xs text-zinc-500 mt-0.5 truncate">{tx.notes}</p>
                               )}
                             </div>
                           </div>
@@ -1612,7 +1612,7 @@ export function DashboardPage() {
                           <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 pl-12 sm:pl-0">
                             <span
                               className={`font-extrabold text-sm sm:text-base mr-1 sm:mr-2 ${
-                                isIncome ? 'text-emerald-400' : 'text-rose-400'
+                                isIncome ? 'text-indigo-400' : 'text-rose-400'
                               }`}
                             >
                               {isIncome ? '+' : '-'}
@@ -1623,7 +1623,7 @@ export function DashboardPage() {
                               <button
                                 type="button"
                                 onClick={() => openEditTransactionModal(tx)}
-                                className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-500/20 text-xs font-semibold text-slate-300 hover:text-emerald-300 flex items-center gap-1 cursor-pointer"
+                                className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-indigo-500/20 text-xs font-semibold text-zinc-300 hover:text-indigo-300 flex items-center gap-1 cursor-pointer"
                               >
                                 <Pencil className="w-3.5 h-3.5" />
                                 Edit
@@ -1632,7 +1632,7 @@ export function DashboardPage() {
                                 type="button"
                                 onClick={() => handleDeleteTx(tx)}
                                 aria-label="Delete transaction"
-                                className="p-2 rounded-xl bg-slate-900 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 cursor-pointer"
+                                className="p-2 rounded-xl bg-zinc-900 hover:bg-rose-500/20 text-zinc-400 hover:text-rose-400 cursor-pointer"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
@@ -1658,49 +1658,49 @@ export function DashboardPage() {
                     <Calendar className="w-6 h-6 text-amber-400" />
                     Subscriptions ({subscriptions.length})
                   </h1>
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-zinc-400">
                     Track recurring monthly charges, annual burn, and 1-Click Cancel Alerts.
                   </p>
                 </div>
                 <button
                   onClick={openAddSubModal}
-                  className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />+ Add Subscription
                 </button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-xs text-slate-400">Active Monthly Burn</span>
+                <div className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+                  <span className="text-xs text-zinc-400">Active Monthly Burn</span>
                   <div className="text-2xl font-black text-white mt-1">
                     {fmt(totalSubsMonthly)}/mo
                   </div>
                 </div>
-                <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-xs text-slate-400">Projected Annual Burn</span>
+                <div className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+                  <span className="text-xs text-zinc-400">Projected Annual Burn</span>
                   <div className="text-2xl font-black text-amber-300 mt-1">
                     {fmt(totalSubsMonthly * 12, 0)}/yr
                   </div>
                 </div>
-                <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-xs text-slate-400">Cancel Alerts Flagged</span>
+                <div className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+                  <span className="text-xs text-zinc-400">Cancel Alerts Flagged</span>
                   <div className="text-2xl font-black text-rose-400 mt-1">
                     {subscriptions.filter((s) => s.status === 'cancel_alert').length}
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-3xl bg-slate-900/70 border border-slate-800 p-6">
+              <div className="rounded-3xl bg-zinc-900/70 border border-zinc-800 p-6">
                 {subscriptions.length === 0 ? (
                   <div className="py-12 text-center space-y-2">
-                    <p className="text-base font-bold text-slate-300">No Subscriptions Tracked</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-base font-bold text-zinc-300">No Subscriptions Tracked</p>
+                    <p className="text-xs text-zinc-500">
                       Click &ldquo;+ Add Subscription&rdquo; to track your recurring monthly bills.
                     </p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-slate-800/70">
+                  <div className="divide-y divide-zinc-800/70">
                     {subscriptions.map((sub) => (
                       <div
                         key={sub.id}
@@ -1717,7 +1717,7 @@ export function DashboardPage() {
                                 </span>
                               )}
                             </div>
-                            <div className="text-xs text-slate-400">
+                            <div className="text-xs text-zinc-400">
                               Bills on Day {sub.billing_day} •{' '}
                               {fmt(Number(sub.monthly_cost) * 12, 0)}/year
                             </div>
@@ -1732,10 +1732,10 @@ export function DashboardPage() {
                             onClick={() => toggleSubStatus(sub)}
                             className={`px-3 py-1.5 rounded-xl text-xs font-semibold border cursor-pointer transition-colors ${
                               sub.status === 'active'
-                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                                ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-300'
                                 : sub.status === 'cancel_alert'
                                   ? 'bg-amber-500/15 border-amber-500/40 text-amber-300'
-                                  : 'bg-slate-800 border-slate-700 text-slate-400 line-through'
+                                  : 'bg-zinc-800 border-zinc-700 text-zinc-400 line-through'
                             }`}
                           >
                             {sub.status === 'active'
@@ -1747,7 +1747,7 @@ export function DashboardPage() {
                           <button
                             type="button"
                             onClick={() => openEditSubModal(sub)}
-                            className="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-xs font-semibold text-slate-300 flex items-center gap-1 cursor-pointer"
+                            className="px-3 py-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-xs font-semibold text-zinc-300 flex items-center gap-1 cursor-pointer"
                           >
                             <Pencil className="w-3.5 h-3.5" />
                             Edit
@@ -1784,11 +1784,11 @@ export function DashboardPage() {
       </div>
 
       {/* COPYRIGHT FOOTER */}
-      <footer className="border-t border-slate-900 bg-slate-950/90 py-6 pb-24 lg:pb-6 mt-8 sm:mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3 text-xs text-slate-500 text-center sm:text-left">
+      <footer className="border-t border-zinc-900 bg-zinc-950/90 py-6 pb-24 lg:pb-6 mt-8 sm:mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3 text-xs text-zinc-500 text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <Coins className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span className="font-bold text-slate-300">KoinCLICK</span>
+            <Coins className="w-4 h-4 text-indigo-400 shrink-0" />
+            <span className="font-bold text-zinc-300">KoinCLICK</span>
             <span>— Simple Multi-Currency Budget Manager</span>
           </div>
           <div>© {new Date().getFullYear()} KoinCLICK. All rights reserved.</div>
@@ -1798,7 +1798,7 @@ export function DashboardPage() {
       {/* MOBILE BOTTOM NAVIGATION BAR */}
       <nav
         aria-label="Mobile Navigation"
-        className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/90 px-2 py-1.5 flex items-center justify-around"
+        className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/90 px-2 py-1.5 flex items-center justify-around"
       >
         {(
           [
@@ -1817,14 +1817,14 @@ export function DashboardPage() {
               onClick={() => setActiveTab(item.id)}
               className={`relative flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl min-w-[64px] transition-all cursor-pointer ${
                 active
-                  ? 'text-emerald-400 bg-emerald-500/10'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'text-indigo-400 bg-indigo-500/10'
+                  : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
               <div className="relative">
                 <Icon className="w-5 h-5" />
                 {item.count !== null && item.count > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-emerald-500 text-slate-950 text-[9px] font-extrabold flex items-center justify-center">
+                  <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-indigo-500 text-white text-[9px] font-extrabold flex items-center justify-center">
                     {item.count > 99 ? '99+' : item.count}
                   </span>
                 )}
@@ -1837,13 +1837,13 @@ export function DashboardPage() {
 
       {/* MODAL 0: Start From Zero / Reset Confirmation Modal */}
       {showResetModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-3xl bg-zinc-900 border border-zinc-800 p-6 shadow-2xl space-y-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <RotateCcw className="w-5 h-5 text-rose-400" />
               Start Everything From Zero
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-zinc-400">
               Choose how you would like to reset your KoinCLICK budget:
             </p>
 
@@ -1852,12 +1852,12 @@ export function DashboardPage() {
                 type="button"
                 disabled={resetting}
                 onClick={handleResetTransactionsToZero}
-                className="w-full text-left p-4 rounded-2xl bg-slate-950 hover:bg-slate-800/80 border border-rose-500/30 transition-colors cursor-pointer"
+                className="w-full text-left p-4 rounded-2xl bg-zinc-950 hover:bg-zinc-800/80 border border-rose-500/30 transition-colors cursor-pointer"
               >
                 <div className="font-bold text-sm text-rose-300">
                   1. Clear All Transactions to 0.00
                 </div>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-zinc-400 mt-1">
                   Removes all {transactions.length} transactions and resets ClickPad counters to 0.
                 </p>
               </button>
@@ -1866,12 +1866,12 @@ export function DashboardPage() {
                 type="button"
                 disabled={resetting}
                 onClick={handleFullFactoryResetToZero}
-                className="w-full text-left p-4 rounded-2xl bg-slate-950 hover:bg-slate-800/80 border border-amber-500/30 transition-colors cursor-pointer"
+                className="w-full text-left p-4 rounded-2xl bg-zinc-950 hover:bg-zinc-800/80 border border-amber-500/30 transition-colors cursor-pointer"
               >
                 <div className="font-bold text-sm text-amber-300">
                   2. Full Factory Reset (All Pads, Subs & Income to 0.00)
                 </div>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-zinc-400 mt-1">
                   Starts your entire account from a 100% blank slate with 0 transactions and 0.00
                   income.
                 </p>
@@ -1882,7 +1882,7 @@ export function DashboardPage() {
               <button
                 type="button"
                 onClick={() => setShowResetModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
               >
                 Cancel
               </button>
@@ -1893,20 +1893,20 @@ export function DashboardPage() {
 
       {/* MODAL 1: Add / Edit Transaction (Simple: Expense or Income) */}
       {showTxModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-lg rounded-3xl bg-zinc-900 border border-zinc-800 p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-white">
                 {editingTx ? 'Edit Transaction' : 'Add New Transaction'}
               </h3>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 font-semibold">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-300 font-semibold">
                 Multi-Currency
               </span>
             </div>
 
             <form onSubmit={handleSaveTransaction} className="space-y-4">
               {/* Transaction Type Selector */}
-              <div className="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-2xl border border-slate-800">
+              <div className="grid grid-cols-2 gap-2 p-1 bg-zinc-950 rounded-2xl border border-zinc-800">
                 {(
                   [
                     { id: 'expense', label: 'Expense', icon: TrendingDown },
@@ -1930,8 +1930,8 @@ export function DashboardPage() {
                       }}
                       className={`py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-all ${
                         txType === item.id
-                          ? 'bg-emerald-500 text-slate-950 shadow'
-                          : 'text-slate-400 hover:text-white'
+                          ? 'bg-indigo-500 text-white shadow'
+                          : 'text-zinc-400 hover:text-white'
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5" />
@@ -1944,23 +1944,23 @@ export function DashboardPage() {
               {/* Emoji + Title */}
               <div className="grid grid-cols-4 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Emoji</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Emoji</label>
                   <input
                     type="text"
                     value={txEmoji}
                     onChange={(e) => setTxEmoji(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-center text-lg"
+                    className="w-full px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-center text-lg"
                   />
                 </div>
                 <div className="col-span-3">
-                  <label className="text-xs text-slate-400 block mb-1">Title / Description</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Title / Description</label>
                   <input
                     type="text"
                     required
                     placeholder="Supermarket, Salary, Coffee, etc."
                     value={txTitle}
                     onChange={(e) => setTxTitle(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                   />
                 </div>
               </div>
@@ -1968,7 +1968,7 @@ export function DashboardPage() {
               {/* Amount + Currency Selector */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-2">
-                  <label className="text-xs text-slate-400 block mb-1">Amount</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Amount</label>
                   <input
                     type="number"
                     step="0.01"
@@ -1976,15 +1976,15 @@ export function DashboardPage() {
                     placeholder="25.00"
                     value={txAmount}
                     onChange={(e) => setTxAmount(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white font-bold"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white font-bold"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Currency</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Currency</label>
                   <select
                     value={txCurrency}
                     onChange={(e) => setTxCurrency(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white font-semibold"
+                    className="w-full px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white font-semibold"
                   >
                     {SUPPORTED_CURRENCIES.map((c) => (
                       <option key={c.code} value={c.code}>
@@ -2010,7 +2010,7 @@ export function DashboardPage() {
               {/* Category + Date */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Category</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Category</label>
                   <select
                     value={txCategory}
                     onChange={(e) => {
@@ -2018,7 +2018,7 @@ export function DashboardPage() {
                       const found = CATEGORIES.find((c) => c.label === e.target.value)
                       if (found && !editingTx) setTxEmoji(found.emoji)
                     }}
-                    className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                    className="w-full px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                   >
                     {CATEGORIES.map((c) => (
                       <option key={c.label} value={c.label}>
@@ -2028,42 +2028,42 @@ export function DashboardPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Transaction Date</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Transaction Date</label>
                   <input
                     type="date"
                     value={txDate}
                     onChange={(e) => setTxDate(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                    className="w-full px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Notes (Optional)</label>
+                <label className="text-xs text-zinc-400 block mb-1">Notes (Optional)</label>
                 <input
                   type="text"
                   placeholder="Optional note or memo..."
                   value={txNotes}
                   onChange={(e) => setTxNotes(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                 />
               </div>
 
               {/* Product or Receipt (Reçu) Photo Capture */}
-              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+              <div className="p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-zinc-200 flex items-center gap-1.5">
                     <Camera className="w-4 h-4 text-amber-400" />
                     Product or Receipt (Reçu) Photo
                   </span>
-                  <div className="inline-flex p-0.5 rounded-xl bg-slate-900 border border-slate-800">
+                  <div className="inline-flex p-0.5 rounded-xl bg-zinc-900 border border-zinc-800">
                     <button
                       type="button"
                       onClick={() => setTxReceiptKind('receipt')}
                       className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold cursor-pointer ${
                         txReceiptKind === 'receipt'
-                          ? 'bg-amber-500 text-slate-950'
-                          : 'text-slate-400 hover:text-white'
+                          ? 'bg-amber-500 text-white'
+                          : 'text-zinc-400 hover:text-white'
                       }`}
                     >
                       🧾 Reçu / Receipt
@@ -2073,8 +2073,8 @@ export function DashboardPage() {
                       onClick={() => setTxReceiptKind('product')}
                       className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold cursor-pointer ${
                         txReceiptKind === 'product'
-                          ? 'bg-emerald-500 text-slate-950'
-                          : 'text-slate-400 hover:text-white'
+                          ? 'bg-indigo-500 text-white'
+                          : 'text-zinc-400 hover:text-white'
                       }`}
                     >
                       📦 Product
@@ -2104,7 +2104,7 @@ export function DashboardPage() {
                     <span>Live Cam</span>
                   </button>
 
-                  <label className="py-2.5 px-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer text-center">
+                  <label className="py-2.5 px-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer text-center">
                     <Upload className="w-3.5 h-3.5 shrink-0" />
                     <span>Upload</span>
                     <input
@@ -2123,17 +2123,17 @@ export function DashboardPage() {
                 )}
 
                 {txReceiptImage && (
-                  <div className="relative rounded-xl overflow-hidden border border-slate-700 bg-slate-900">
+                  <div className="relative rounded-xl overflow-hidden border border-zinc-700 bg-zinc-900">
                     <img
                       src={txReceiptImage}
                       alt="Attached product or receipt"
-                      className="w-full max-h-48 object-contain bg-slate-950"
+                      className="w-full max-h-48 object-contain bg-zinc-950"
                     />
                     <button
                       type="button"
                       onClick={() => setTxReceiptImage(null)}
                       title="Remove photo"
-                      className="absolute top-2 right-2 p-1.5 rounded-lg bg-slate-950/90 hover:bg-rose-500/80 text-white border border-slate-700 cursor-pointer"
+                      className="absolute top-2 right-2 p-1.5 rounded-lg bg-zinc-950/90 hover:bg-rose-500/80 text-white border border-zinc-700 cursor-pointer"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -2145,13 +2145,13 @@ export function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowTxModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold cursor-pointer"
                 >
                   {editingTx ? 'Save Changes' : 'Add Transaction'}
                 </button>
@@ -2163,38 +2163,38 @@ export function DashboardPage() {
 
       {/* MODAL 2: Add / Edit 1-Click Pad */}
       {showPadModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-3xl bg-zinc-900 border border-zinc-800 p-6 shadow-2xl">
             <h3 className="text-lg font-bold text-white mb-4">
               {editingPad ? 'Edit 1-Click Pad' : 'Create 1-Click Quick-Log Pad'}
             </h3>
             <form onSubmit={handleSaveClickPad} className="space-y-4">
               <div className="grid grid-cols-4 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Emoji</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Emoji</label>
                   <input
                     type="text"
                     value={padEmoji}
                     onChange={(e) => setPadEmoji(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-center text-lg"
+                    className="w-full px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-center text-lg"
                   />
                 </div>
                 <div className="col-span-3">
-                  <label className="text-xs text-slate-400 block mb-1">Habit Label</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Habit Label</label>
                   <input
                     type="text"
                     required
                     placeholder="Morning Coffee"
                     value={padLabel}
                     onChange={(e) => setPadLabel(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">
+                  <label className="text-xs text-zinc-400 block mb-1">
                     Price ({activeCurrency})
                   </label>
                   <input
@@ -2204,16 +2204,16 @@ export function DashboardPage() {
                     placeholder="4.50"
                     value={padAmount}
                     onChange={(e) => setPadAmount(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Category</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Category</label>
                   <input
                     type="text"
                     value={padCategory}
                     onChange={(e) => setPadCategory(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                   />
                 </div>
               </div>
@@ -2234,13 +2234,13 @@ export function DashboardPage() {
                   <button
                     type="button"
                     onClick={() => setShowPadModal(false)}
-                    className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 text-xs font-bold cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-indigo-500 text-white text-xs font-bold cursor-pointer"
                   >
                     {editingPad ? 'Save Pad' : 'Create ClickPad'}
                   </button>
@@ -2253,8 +2253,8 @@ export function DashboardPage() {
 
       {/* MODAL 3: Add / Edit Subscription */}
       {showSubModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-3xl bg-zinc-900 border border-zinc-800 p-6 shadow-2xl">
             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <CreditCard className="w-5 h-5 text-amber-400" />
               {editingSub ? 'Edit Subscription' : 'Add Recurring Subscription'}
@@ -2262,30 +2262,30 @@ export function DashboardPage() {
             <form onSubmit={handleSaveSubscription} className="space-y-4">
               <div className="grid grid-cols-4 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Emoji</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Emoji</label>
                   <input
                     type="text"
                     value={subEmoji}
                     onChange={(e) => setSubEmoji(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-center text-lg"
+                    className="w-full px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-center text-lg"
                   />
                 </div>
                 <div className="col-span-3">
-                  <label className="text-xs text-slate-400 block mb-1">Service Name</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Service Name</label>
                   <input
                     type="text"
                     required
                     placeholder="Spotify, iCloud, Gym"
                     value={subName}
                     onChange={(e) => setSubName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">
+                  <label className="text-xs text-zinc-400 block mb-1">
                     Monthly Cost ({activeCurrency})
                   </label>
                   <input
@@ -2295,11 +2295,11 @@ export function DashboardPage() {
                     placeholder="14.99"
                     value={subCost}
                     onChange={(e) => setSubCost(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Billing Day (1-31)</label>
+                  <label className="text-xs text-zinc-400 block mb-1">Billing Day (1-31)</label>
                   <input
                     type="number"
                     min="1"
@@ -2307,19 +2307,19 @@ export function DashboardPage() {
                     required
                     value={subBillingDay}
                     onChange={(e) => setSubBillingDay(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Status</label>
+                <label className="text-xs text-zinc-400 block mb-1">Status</label>
                 <select
                   value={subStatus}
                   onChange={(e) =>
                     setSubStatus(e.target.value as 'active' | 'cancel_alert' | 'paused')
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                 >
                   <option value="active">Active</option>
                   <option value="cancel_alert">1-Click Cancel Alert (Renewing Soon)</option>
@@ -2343,13 +2343,13 @@ export function DashboardPage() {
                   <button
                     type="button"
                     onClick={() => setShowSubModal(false)}
-                    className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 text-xs font-bold cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-indigo-500 text-white text-xs font-bold cursor-pointer"
                   >
                     {editingSub ? 'Save Changes' : 'Add Subscription'}
                   </button>
@@ -2362,29 +2362,29 @@ export function DashboardPage() {
 
       {/* MODAL 4: Monthly Cashflow & Multi-Currency Settings */}
       {showSettingsModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-800 p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-3xl bg-zinc-900 border border-zinc-800 p-6 shadow-2xl">
             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <Wallet className="w-5 h-5 text-emerald-400" />
+              <Wallet className="w-5 h-5 text-indigo-400" />
               Budget & Multi-Currency Settings
             </h3>
             <form onSubmit={handleSaveSettings} className="space-y-4">
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Profile Display Name</label>
+                <label className="text-xs text-zinc-400 block mb-1">Profile Display Name</label>
                 <input
                   type="text"
                   value={displayNameInput}
                   onChange={(e) => setDisplayNameInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                 />
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Primary Display Currency</label>
+                <label className="text-xs text-zinc-400 block mb-1">Primary Display Currency</label>
                 <select
                   value={currencyInput}
                   onChange={(e) => setCurrencyInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white font-semibold"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white font-semibold"
                 >
                   {SUPPORTED_CURRENCIES.map((c) => (
                     <option key={c.code} value={c.code}>
@@ -2395,7 +2395,7 @@ export function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 block mb-1">
+                <label className="text-xs text-zinc-400 block mb-1">
                   Monthly Take-Home Income ({currencyInput})
                 </label>
                 <input
@@ -2404,11 +2404,11 @@ export function DashboardPage() {
                   required
                   value={incomeInput}
                   onChange={(e) => setIncomeInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">
+                <label className="text-xs text-zinc-400 block mb-1">
                   Fixed Monthly Bills ({currencyInput})
                 </label>
                 <input
@@ -2417,11 +2417,11 @@ export function DashboardPage() {
                   required
                   value={billsInput}
                   onChange={(e) => setBillsInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">
+                <label className="text-xs text-zinc-400 block mb-1">
                   Monthly Savings Goal ({currencyInput})
                 </label>
                 <input
@@ -2430,7 +2430,7 @@ export function DashboardPage() {
                   required
                   value={savingsInput}
                   onChange={(e) => setSavingsInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white"
                 />
               </div>
 
@@ -2438,13 +2438,13 @@ export function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowSettingsModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 text-xs font-bold cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-indigo-500 text-white text-xs font-bold cursor-pointer"
                 >
                   Save Changes
                 </button>
@@ -2457,11 +2457,11 @@ export function DashboardPage() {
       {/* MODAL 5: Photo Preview Lightbox (Product / Reçu) */}
       {previewPhotoTx && previewPhotoTx.receipt_image && (
         <div
-          className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
+          className="fixed inset-0 z-50 bg-zinc-950/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
           onClick={() => setPreviewPhotoTx(null)}
         >
           <div
-            className="w-full max-w-xl rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-800 p-4 sm:p-6 shadow-2xl space-y-4"
+            className="w-full max-w-xl rounded-2xl sm:rounded-3xl bg-zinc-900 border border-zinc-800 p-4 sm:p-6 shadow-2xl space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-3">
@@ -2473,20 +2473,20 @@ export function DashboardPage() {
                 <h3 className="text-base sm:text-lg font-bold text-white truncate">
                   {previewPhotoTx.emoji} {previewPhotoTx.title}
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-zinc-400">
                   {fmt(Number(previewPhotoTx.amount))} • {previewPhotoTx.category}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setPreviewPhotoTx(null)}
-                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer shrink-0"
+                className="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 cursor-pointer shrink-0"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center">
+            <div className="rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 flex items-center justify-center">
               <img
                 src={previewPhotoTx.receipt_image}
                 alt={previewPhotoTx.title}
@@ -2498,7 +2498,7 @@ export function DashboardPage() {
               <a
                 href={previewPhotoTx.receipt_image}
                 download={`KoinCLICK_${previewPhotoTx.receipt_kind || 'receipt'}_${previewPhotoTx.id}.jpg`}
-                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold flex items-center gap-1.5"
               >
                 <Download className="w-3.5 h-3.5" />
                 Download Photo
@@ -2506,7 +2506,7 @@ export function DashboardPage() {
               <button
                 type="button"
                 onClick={() => setPreviewPhotoTx(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
               >
                 Close
               </button>
@@ -2517,8 +2517,8 @@ export function DashboardPage() {
 
       {/* MODAL 6: Live Camera Capture */}
       {showCameraModal && (
-        <div className="fixed inset-0 z-[60] bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
-          <div className="w-full max-w-lg rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-800 p-4 sm:p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-[60] bg-zinc-950/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+          <div className="w-full max-w-lg rounded-2xl sm:rounded-3xl bg-zinc-900 border border-zinc-800 p-4 sm:p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
                 <Camera className="w-5 h-5 text-amber-400" />
@@ -2527,7 +2527,7 @@ export function DashboardPage() {
               <button
                 type="button"
                 onClick={closeLiveCamera}
-                className="p-2 rounded-xl bg-slate-800 text-slate-300 cursor-pointer"
+                className="p-2 rounded-xl bg-zinc-800 text-zinc-300 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -2538,7 +2538,7 @@ export function DashboardPage() {
                 {cameraError}
               </div>
             ) : (
-              <div className="rounded-2xl overflow-hidden bg-black border border-slate-800 aspect-video flex items-center justify-center">
+              <div className="rounded-2xl overflow-hidden bg-black border border-zinc-800 aspect-video flex items-center justify-center">
                 <video
                   ref={videoRef}
                   autoPlay
@@ -2553,7 +2553,7 @@ export function DashboardPage() {
               <button
                 type="button"
                 onClick={closeLiveCamera}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
               >
                 Cancel
               </button>
@@ -2561,7 +2561,7 @@ export function DashboardPage() {
                 <button
                   type="button"
                   onClick={captureFromLiveCamera}
-                  className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                 >
                   <Camera className="w-4 h-4" />
                   Snap Photo

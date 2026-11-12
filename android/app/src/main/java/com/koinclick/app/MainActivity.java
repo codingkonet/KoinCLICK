@@ -30,11 +30,11 @@ public class MainActivity extends Activity {
 
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.parseColor("#020617"));
-        window.setNavigationBarColor(Color.parseColor("#020617"));
+        window.setStatusBarColor(Color.parseColor("#09090b"));
+        window.setNavigationBarColor(Color.parseColor("#09090b"));
 
         webView = new WebView(this);
-        webView.setBackgroundColor(Color.parseColor("#020617"));
+        webView.setBackgroundColor(Color.parseColor("#09090b"));
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
