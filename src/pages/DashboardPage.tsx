@@ -108,6 +108,41 @@ export function DashboardPage() {
     setLang((prev) => (prev === 'en' ? 'ar' : 'en'))
   }
 
+  // PWA Browser Install Prompt
+  const [installPrompt, setInstallPrompt] = useState<{
+    prompt: () => Promise<void>
+    userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+  } | null>(null)
+
+  useEffect(() => {
+    const onBeforeInstall = (e: Event) => {
+      e.preventDefault()
+      setInstallPrompt(
+        e as unknown as {
+          prompt: () => Promise<void>
+          userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+        }
+      )
+    }
+    const onInstalled = () => setInstallPrompt(null)
+    window.addEventListener('beforeinstallprompt', onBeforeInstall)
+    window.addEventListener('appinstalled', onInstalled)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onBeforeInstall)
+      window.removeEventListener('appinstalled', onInstalled)
+    }
+  }, [])
+
+  const handleInstallPwa = async () => {
+    if (!installPrompt) return
+    await installPrompt.prompt()
+    const choice = await installPrompt.userChoice
+    if (choice.outcome === 'accepted') {
+      setInstallPrompt(null)
+      showToast('📲 KoinCLICK installed as an app!')
+    }
+  }
+
   // Active Display Currency (stored in settings.currency, defaults to USD)
   const activeCurrency = settings?.currency || 'USD'
 
@@ -1215,6 +1250,18 @@ export function DashboardPage() {
 
             {/* Right Controls */}
             <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+              {installPrompt && (
+                <button
+                  type="button"
+                  onClick={handleInstallPwa}
+                  title="Install KoinCLICK App"
+                  className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-[11px] font-bold text-white cursor-pointer transition-colors shadow-sm"
+                >
+                  <Download className="w-3.5 h-3.5 shrink-0" />
+                  <span className="hidden sm:inline">{lang === 'ar' ? 'تثبيت' : 'Install'}</span>
+                </button>
+              )}
+
               {/* Language Switcher (EN / العربية) */}
               <button
                 type="button"
