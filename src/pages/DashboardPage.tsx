@@ -1365,23 +1365,23 @@ export function DashboardPage() {
                 </button>
               )}
 
-              {/* Language Switcher (EN / FR / العربية) */}
+              {/* Language Switcher (EN / FR / العربية) - Desktop/Tablet */}
               <button
                 type="button"
                 onClick={toggleLanguage}
                 title="Switch Language (EN / FR / العربية)"
-                className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-[11px] font-bold text-teal-800 cursor-pointer transition-colors"
+                className="hidden sm:flex items-center gap-1 px-2 py-1.5 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-[11px] font-bold text-teal-800 cursor-pointer transition-colors"
               >
                 <Languages className="w-3.5 h-3.5 shrink-0" />
                 <span>{lang === 'en' ? 'EN' : lang === 'fr' ? 'FR' : 'عربي'}</span>
               </button>
 
-              {/* Due-Date Reminders Bell */}
+              {/* Due-Date Reminders Bell - Desktop/Tablet */}
               <button
                 type="button"
                 onClick={handleCheckReminders}
                 title="Check Tontine & Subscription Reminders"
-                className="p-1.5 sm:p-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-700 hover:text-teal-700 cursor-pointer transition-colors"
+                className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-700 hover:text-teal-700 cursor-pointer transition-colors"
               >
                 <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
@@ -1390,7 +1390,7 @@ export function DashboardPage() {
                 type="button"
                 onClick={() => setShowResetModal(true)}
                 title="Reset & Start From Zero"
-                className="flex items-center gap-1 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-700 text-[11px] font-bold cursor-pointer transition-colors"
+                className="hidden sm:flex items-center gap-1 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-700 text-[11px] font-bold cursor-pointer transition-colors"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span className="hidden xl:inline">{t.resetZero}</span>
@@ -1421,12 +1421,12 @@ export function DashboardPage() {
                 </button>
               </div>
 
-              {/* Privacy Blur Toggle */}
+              {/* Privacy Blur Toggle - Desktop/Tablet */}
               <button
                 type="button"
                 onClick={togglePrivacyBlur}
                 title={privacyBlur ? 'Show Amounts' : 'Hide Amounts (Privacy Mode)'}
-                className={`p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-colors ${
+                className={`hidden sm:flex p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-colors ${
                   privacyBlur
                     ? 'bg-teal-700/10 border-teal-700/30 text-teal-800'
                     : 'bg-white hover:bg-stone-100 border-stone-200 text-stone-700'
@@ -1435,7 +1435,7 @@ export function DashboardPage() {
                 {privacyBlur ? <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
               </button>
 
-              {/* 4-Digit PIN App Lock */}
+              {/* 4-Digit PIN App Lock - Desktop/Tablet */}
               <button
                 type="button"
                 onClick={() => {
@@ -1450,7 +1450,7 @@ export function DashboardPage() {
                   setShowPinModal(true)
                 }}
                 title={savedPin ? 'Lock App (Right-click to change PIN)' : 'Set 4-Digit App PIN'}
-                className={`p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-colors ${
+                className={`hidden sm:flex p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-colors ${
                   savedPin
                     ? 'bg-white hover:bg-stone-100 border-teal-700/25 text-teal-800'
                     : 'bg-white hover:bg-stone-100 border-stone-200 text-stone-500'
@@ -1471,7 +1471,7 @@ export function DashboardPage() {
                 title="Budget & Currency Settings"
                 className="p-1.5 sm:p-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-700 cursor-pointer"
               >
-                <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <Settings className="w-4 h-4" />
               </button>
 
               <button
@@ -1480,10 +1480,76 @@ export function DashboardPage() {
                 title={t.signOut}
                 className="flex items-center gap-1 p-1.5 sm:p-2 rounded-xl bg-white hover:bg-rose-500/15 hover:border-rose-500/40 hover:text-rose-700 border border-stone-200 text-xs font-semibold text-stone-700 transition-colors cursor-pointer"
               >
-                <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <LogOut className="w-4 h-4" />
                 <span className="hidden xl:inline">{t.signOut}</span>
               </button>
             </div>
+          </div>
+
+          {/* Mobile Secondary Utility Strip (ensures all icons including Logout fit cleanly on phones) */}
+          <div className="sm:hidden max-w-7xl mx-auto px-2.5 pb-2 flex items-center justify-between gap-1.5 border-t border-stone-200/70 pt-1.5">
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-white border border-stone-200 text-[11px] font-bold text-teal-800 cursor-pointer"
+            >
+              <Languages className="w-3.5 h-3.5" />
+              <span>{lang === 'en' ? 'EN' : lang === 'fr' ? 'FR' : 'عربي'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCheckReminders}
+              title="Reminders"
+              className="flex-1 flex items-center justify-center py-1.5 rounded-lg bg-white border border-stone-200 text-stone-700 cursor-pointer"
+            >
+              <Bell className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={togglePrivacyBlur}
+              title={privacyBlur ? 'Show Amounts' : 'Hide Amounts'}
+              className={`flex-1 flex items-center justify-center py-1.5 rounded-lg border cursor-pointer ${
+                privacyBlur
+                  ? 'bg-teal-700/10 border-teal-700/30 text-teal-800'
+                  : 'bg-white border-stone-200 text-stone-700'
+              }`}
+            >
+              {privacyBlur ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (savedPin) {
+                  setIsLocked(true)
+                } else {
+                  setShowPinModal(true)
+                }
+              }}
+              onContextMenu={(e) => {
+                e.preventDefault()
+                setShowPinModal(true)
+              }}
+              title={savedPin ? 'Lock App' : 'Set PIN'}
+              className={`flex-1 flex items-center justify-center py-1.5 rounded-lg border cursor-pointer ${
+                savedPin
+                  ? 'bg-white border-teal-700/25 text-teal-800'
+                  : 'bg-white border-stone-200 text-stone-500'
+              }`}
+            >
+              {savedPin ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowResetModal(true)}
+              title="Reset"
+              className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-700 text-[11px] font-bold cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
           </div>
         </header>
 
