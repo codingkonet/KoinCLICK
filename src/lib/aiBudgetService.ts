@@ -440,3 +440,157 @@ export async function askAiBudgetAdvisor(params: {
     isLiveAi: true,
   }
 }
+
+export interface ScannedReceiptResult {
+  title: string
+  amount: number
+  currency: string
+  category: string
+  txDate: string
+  notes: string
+}
+
+export async function scanReceiptWithAi(
+  model: KoinAiModel,
+  imageDataUrl: string,
+  allowedCategories: string[],
+  fallbackCurrency: string
+): Promise<ScannedReceiptResult> {
+  const match = imageDataUrl.match(/^data:(image\/[a-zA-Z0-9+.-]+);base64,(.+)$/)
+  if (!match) {
+    throw new Error('Invalid image format. Please upload or capture a JPEG/PNG image.')
+  }
+  const mimeType = match[1]
+  const base64Data = match[2]
+
+  const preset = AI_PROVIDER_PRESETS[model.provider] || AI_PROVIDER_PRESETS.custom
+  const baseUrl = (model.base_url || preset.defaultBaseUrl).replace(/\/+$/, '')
+
+  const prompt = `Extract the receipt or product purchase details from this image and return ONLY valid JSON (no markdown fences):
+{
+  "title": "short merchant or product name",
+  "amount": number (positive total paid),
+  "currency": "3-letter code like USD, EUR, MAD, GBP (default ${fallbackCurrency})",
+  "category": "one of: ${allowedCategories.join(', ')}",
+  "txDate": "YYYY-MM-DD (use ${new Date().toISOString().slice(0, 10)} if unclear)",
+  "notes": "brief 1-line summary of items"
+}`
+
+  let raw = ''
+
+  if (model.provider === 'gemini') {
+    const url = `${baseUrl}/models/${encodeURIComponent(model.model_id)}:generateContent?key=${encodeURIComponent(model.api_key)}`
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { text: prompt },
+              { inlineData: { mimeType, data: base64Data } },
+            ],
+          },
+        ],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 500 },
+      }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data?.error?.message || `Gemini vision error (${res.status})`)
+    raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || ''
+  } else if (model.provider === 'anthropic') {
+    const res = await fetch(`${baseUrl}/messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': model.api_key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: model.model_id,
+        max_tokens: 500,
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'image',
+                source: { type: 'base64', media_type: mimeType, data: base64Data },
+              },
+              { type: 'text', text: prompt },
+            ],
+          },
+        ],
+      }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data?.error?.message || `Anthropic vision error (${res.status})`)
+    raw = data?.content?.[0]?.text || ''
+  } else {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${model.api_key}`,
+    }
+    if (model.provider === 'openrouter') {
+      headers['HTTP-Referer'] = window.location.origin
+      headers['X-Title'] = 'KoinCLICK Receipt Scanner'
+    }
+    const res = await fetch(`${baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: model.model_id,
+        temperature: 0.1,
+        max_tokens: 500,
+        messages: [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: prompt },
+              { type: 'image_url', image_url: { url: imageDataUrl } },
+            ],
+          },
+        ],
+      }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data?.error?.message || `Vision API error (${res.status})`)
+    raw = data?.choices?.[0]?.message?.content || ''
+  }
+
+  const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim()
+  const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
+  const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : cleaned)
+
+  const pickedCat = allowedCategories.includes(String(parsed.category))
+    ? String(parsed.category)
+    : allowedCategories[0] || 'General'
+
+  return {
+    title: String(parsed.title || 'Scanned Receipt').slice(0, 60),
+    amount: Math.max(0, Number(parsed.amount || 0)),
+    currency: String(parsed.currency || fallbackCurrency).toUpperCase().slice(0, 3),
+    category: pickedCat,
+    txDate: /^\d{4}-\d{2}-\d{2}$/.test(String(parsed.txDate || ''))
+      ? String(parsed.txDate)
+      : new Date().toISOString().slice(0, 10),
+    notes: String(parsed.notes || 'Scanned by AI').slice(0, 120),
+  }
+}
+
+export function guessCategoryFromTitle(title: string): string {
+  const t = title.toLowerCase()
+  if (/coffee|starbucks|cafe|espresso|tea/.test(t)) return 'Coffee'
+  if (/market|grocery|supermarket|carrefour|marjane|walmart|aldi|lidl/.test(t)) return 'Groceries'
+  if (/restaurant|pizza|burger|uber eats|glovo|food|dining/.test(t)) return 'Dining'
+  if (/uber|taxi|train|bus|metro|fuel|gas|shell|transit/.test(t)) return 'Transit'
+  if (/netflix|spotify|cinema|steam|game|youtube|twitch/.test(t)) return 'Entertainment'
+  if (/amazon|zara|store|shop|mall|nike/.test(t)) return 'Shopping'
+  if (/electric|water|internet|rent|phone|bill|wifi/.test(t)) return 'Utilities & Bills'
+  if (/pharmacy|gym|doctor|health|clinic/.test(t)) return 'Health & Fitness'
+  if (/flight|hotel|airbnb|ryanair|travel/.test(t)) return 'Travel'
+  if (/salary|payroll|deposit|refund|dividend/.test(t)) return 'Salary / Income'
+  return 'General'
+}

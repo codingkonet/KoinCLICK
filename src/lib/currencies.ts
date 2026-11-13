@@ -8,6 +8,8 @@ export interface CurrencyInfo {
 }
 
 const CUSTOM_RATES_KEY = 'koinclick_custom_fx_rates'
+const LIVE_FX_SYNC_KEY = 'koinclick_live_fx_synced_at'
+const FX_CACHE_TTL_MS = 12 * 60 * 60 * 1000
 
 export const DEFAULT_CURRENCIES: CurrencyInfo[] = [
   { code: 'USD', symbol: '$', name: 'US Dollar', flag: '🇺🇸', ratePerUsd: 1.0 },
@@ -38,6 +40,43 @@ export function saveCustomRatesMap(rates: Record<string, number>) {
 
 export function resetCustomRatesMap() {
   localStorage.removeItem(CUSTOM_RATES_KEY)
+  localStorage.removeItem(LIVE_FX_SYNC_KEY)
+}
+
+export function getLastFxSyncTime(): string | null {
+  return localStorage.getItem(LIVE_FX_SYNC_KEY)
+}
+
+export async function syncLiveExchangeRates(
+  force = false
+): Promise<{ ok: boolean; syncedAt: string | null; count: number }> {
+  try {
+    const last = localStorage.getItem(LIVE_FX_SYNC_KEY)
+    if (!force && last && Date.now() - new Date(last).getTime() < FX_CACHE_TTL_MS) {
+      return { ok: true, syncedAt: last, count: 0 }
+    }
+
+    const res = await fetch('https://open.er-api.com/v6/latest/USD')
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const data = await res.json()
+    const rates = data?.rates as Record<string, number> | undefined
+    if (!rates) throw new Error('Missing rates payload')
+
+    const nextMap: Record<string, number> = { ...getCustomRatesMap() }
+    let count = 0
+    for (const c of DEFAULT_CURRENCIES) {
+      if (c.code !== 'USD' && typeof rates[c.code] === 'number' && rates[c.code] > 0) {
+        nextMap[c.code] = Number(rates[c.code].toFixed(4))
+        count++
+      }
+    }
+    saveCustomRatesMap(nextMap)
+    const nowIso = new Date().toISOString()
+    localStorage.setItem(LIVE_FX_SYNC_KEY, nowIso)
+    return { ok: true, syncedAt: nowIso, count }
+  } catch {
+    return { ok: false, syncedAt: getLastFxSyncTime(), count: 0 }
+  }
 }
 
 export function getSupportedCurrencies(): CurrencyInfo[] {

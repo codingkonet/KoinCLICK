@@ -13,8 +13,11 @@ import {
   convertCurrency,
   formatMoney,
   getCurrencyInfo,
+  syncLiveExchangeRates,
 } from '../lib/currencies'
 import { compressImageToDataUrl } from '../lib/imageUtils'
+import { scanReceiptWithAi } from '../lib/aiBudgetService'
+import { openPrintableMonthlyReport, parseBankCsv, type ParsedCsvTx } from '../lib/csvPdfUtils'
 import { useAuth } from '../context/AuthContext'
 import { ensureStarterData } from '../lib/seedUserData'
 import { AdminControlPanel } from '../components/AdminControlPanel'
@@ -48,6 +51,13 @@ import {
   Upload,
   X,
   Image as ImageIcon,
+  Eye,
+  EyeOff,
+  Lock,
+  Unlock,
+  FileSpreadsheet,
+  Printer,
+  Wand2,
 } from 'lucide-react'
 
 const CATEGORIES = [
@@ -83,15 +93,97 @@ export function DashboardPage() {
   // Active Display Currency (stored in settings.currency, defaults to USD)
   const activeCurrency = settings?.currency || 'USD'
 
+  // Privacy Blur Mode
+  const [privacyBlur, setPrivacyBlur] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('koinclick_privacy_blur') === '1'
+    } catch {
+      return false
+    }
+  })
+
+  const togglePrivacyBlur = () => {
+    setPrivacyBlur((prev) => {
+      const next = !prev
+      localStorage.setItem('koinclick_privacy_blur', next ? '1' : '0')
+      return next
+    })
+  }
+
+  // Live Exchange Rate Sync
+  const [fxSyncing, setFxSyncing] = useState(false)
+  const [, setFxVersion] = useState(0)
+
+  const handleSyncLiveFx = async (force = true) => {
+    setFxSyncing(true)
+    const res = await syncLiveExchangeRates(force)
+    setFxSyncing(false)
+    if (res.ok) {
+      setFxVersion((v) => v + 1)
+      if (force) showToast(`💱 Live FX rates synced (${res.count || 'cached'} currencies)`)
+    } else if (force) {
+      showToast('⚠️ Could not reach live FX server — using cached rates')
+    }
+  }
+
+  useEffect(() => {
+    syncLiveExchangeRates(false).then((res) => {
+      if (res.ok && res.count > 0) setFxVersion((v) => v + 1)
+    })
+  }, [])
+
+  // 4-Digit PIN App Lock
+  const pinStorageKey = user ? `koinclick_pin_${user.id}` : 'koinclick_pin_guest'
+  const [savedPin, setSavedPin] = useState<string>(() => {
+    try {
+      return user ? localStorage.getItem(`koinclick_pin_${user.id}`) || '' : ''
+    } catch {
+      return ''
+    }
+  })
+  const [isLocked, setIsLocked] = useState<boolean>(() => {
+    try {
+      return !!(user && localStorage.getItem(`koinclick_pin_${user.id}`))
+    } catch {
+      return false
+    }
+  })
+  const [pinEntry, setPinEntry] = useState('')
+  const [pinError, setPinError] = useState('')
+  const [showPinModal, setShowPinModal] = useState(false)
+  const [newPinInput, setNewPinInput] = useState('')
+
+  useEffect(() => {
+    if (!user) return
+    const existing = localStorage.getItem(`koinclick_pin_${user.id}`) || ''
+    setSavedPin(existing)
+    if (existing) setIsLocked(true)
+  }, [user])
+
+  // AI Receipt Scanner, CSV Import & Due Subscriptions
+  const [scanningReceipt, setScanningReceipt] = useState(false)
+  const [showCsvModal, setShowCsvModal] = useState(false)
+  const [csvRows, setCsvRows] = useState<ParsedCsvTx[]>([])
+  const [csvImporting, setCsvImporting] = useState(false)
+  const [loggingDueSubs, setLoggingDueSubs] = useState(false)
+
   const toDisplay = useCallback(
     (usdAmount: number) => convertCurrency(Number(usdAmount || 0), 'USD', activeCurrency),
     [activeCurrency]
   )
 
-  const fmt = useCallback(
+  const rawFmt = useCallback(
     (usdAmount: number, decimals?: number) =>
       formatMoney(toDisplay(usdAmount), activeCurrency, { decimals }),
     [toDisplay, activeCurrency]
+  )
+
+  const fmt = useCallback(
+    (usdAmount: number, decimals?: number) => {
+      if (privacyBlur) return '••••'
+      return formatMoney(toDisplay(usdAmount), activeCurrency, { decimals })
+    },
+    [toDisplay, activeCurrency, privacyBlur]
   )
 
   // Transaction Filters & Search
@@ -788,6 +880,171 @@ export function DashboardPage() {
     showToast('📊 Exported transactions to CSV!')
   }
 
+  // Active AI Model (default active model or first active model)
+  const activeAiModel = useMemo(() => {
+    const active = aiModels.filter((m) => m.is_active)
+    return active.find((m) => m.is_default) || active[0] || null
+  }, [aiModels])
+
+  // Due Subscriptions This Month (not yet logged this YYYY-MM)
+  const dueSubscriptions = useMemo(() => {
+    const today = new Date()
+    const currentDay = today.getDate()
+    const monthPrefix = today.toISOString().slice(0, 7)
+    return subscriptions.filter((sub) => {
+      if (sub.status === 'paused') return false
+      if (sub.billing_day > currentDay) return false
+      const alreadyLogged = transactions.some(
+        (t) =>
+          t.source === 'subscription' &&
+          String(t.tx_date).startsWith(monthPrefix) &&
+          t.title.toLowerCase().includes(sub.name.toLowerCase())
+      )
+      return !alreadyLogged
+    })
+  }, [subscriptions, transactions])
+
+  const handleLogDueSubscriptions = async () => {
+    if (!user || dueSubscriptions.length === 0) return
+    setLoggingDueSubs(true)
+    const todayIso = new Date().toISOString()
+    const rows = dueSubscriptions.map((sub) => ({
+      user_id: user.id,
+      jar_id: null,
+      title: `${sub.name} (Subscription)`,
+      emoji: sub.emoji || '🔁',
+      amount: Number(sub.monthly_cost),
+      tx_type: 'expense' as const,
+      category: 'Utilities & Bills',
+      source: 'subscription' as const,
+      notes: `Auto-logged recurring billing day ${sub.billing_day}`,
+      tx_date: todayIso,
+    }))
+
+    const { data, error } = await supabase
+      .from('koinclick_transactions')
+      .insert(rows)
+      .select('*')
+
+    setLoggingDueSubs(false)
+    if (!error && data) {
+      setTransactions((prev) => [...data, ...prev])
+      showToast(`🔁 Logged ${data.length} due subscription(s)!`)
+    }
+  }
+
+  // AI Receipt Scanner (inside Transaction Modal)
+  const handleAiScanReceipt = async () => {
+    if (!txReceiptImage) return
+    if (!activeAiModel) {
+      showToast('⚠️ Add an active AI Model API in the AI Budget tab first!')
+      return
+    }
+    setScanningReceipt(true)
+    try {
+      const scanned = await scanReceiptWithAi(
+        activeAiModel,
+        txReceiptImage,
+        CATEGORIES.map((c) => c.label),
+        activeCurrency
+      )
+      setTxTitle(scanned.title)
+      if (scanned.amount > 0) setTxAmount(String(scanned.amount))
+      setTxCurrency(scanned.currency || activeCurrency)
+      setTxCategory(scanned.category)
+      const matched = CATEGORIES.find((c) => c.label === scanned.category)
+      if (matched) setTxEmoji(matched.emoji)
+      setTxDate(scanned.txDate)
+      if (scanned.notes) setTxNotes(scanned.notes)
+      showToast(`✨ Scanned receipt with ${activeAiModel.name}!`)
+    } catch (err: unknown) {
+      showToast(`⚠️ AI Scan failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    } finally {
+      setScanningReceipt(false)
+    }
+  }
+
+  // CSV Bank Statement Import
+  const handleCsvFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const text = await file.text()
+    const parsed = parseBankCsv(text)
+    setCsvRows(parsed)
+    e.target.value = ''
+  }
+
+  const handleImportCsvConfirm = async () => {
+    if (!user || csvRows.length === 0) return
+    setCsvImporting(true)
+    const payload = csvRows.slice(0, 150).map((r) => {
+      const catEmoji = CATEGORIES.find((c) => c.label === r.category)?.emoji || '💸'
+      const usdAmt = convertCurrency(r.amount, activeCurrency, 'USD')
+      return {
+        user_id: user.id,
+        jar_id: null,
+        title: r.title,
+        emoji: catEmoji,
+        amount: usdAmt,
+        tx_type: r.tx_type,
+        category: r.category,
+        source: 'manual' as const,
+        notes: 'Imported from CSV',
+        original_amount: r.amount,
+        original_currency: activeCurrency,
+        tx_date: new Date(`${r.tx_date}T12:00:00`).toISOString(),
+      }
+    })
+
+    const { data, error } = await supabase
+      .from('koinclick_transactions')
+      .insert(payload)
+      .select('*')
+
+    setCsvImporting(false)
+    if (!error && data) {
+      setTransactions((prev) => [...data, ...prev])
+      setShowCsvModal(false)
+      setCsvRows([])
+      showToast(`📥 Imported ${data.length} transactions from CSV!`)
+    }
+  }
+
+  // PIN Lock Handlers
+  const handleSavePin = (e: React.FormEvent) => {
+    e.preventDefault()
+    const clean = newPinInput.replace(/\D/g, '').slice(0, 4)
+    if (clean.length !== 4) {
+      showToast('⚠️ Enter a 4-digit numeric PIN')
+      return
+    }
+    localStorage.setItem(pinStorageKey, clean)
+    setSavedPin(clean)
+    setNewPinInput('')
+    setShowPinModal(false)
+    showToast('🔒 4-Digit App PIN enabled!')
+  }
+
+  const handleRemovePin = () => {
+    localStorage.removeItem(pinStorageKey)
+    setSavedPin('')
+    setIsLocked(false)
+    setShowPinModal(false)
+    showToast('🔓 App PIN removed')
+  }
+
+  const handleUnlockPin = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (pinEntry === savedPin) {
+      setIsLocked(false)
+      setPinEntry('')
+      setPinError('')
+    } else {
+      setPinError('Incorrect 4-digit PIN')
+      setPinEntry('')
+    }
+  }
+
   // Filtered Transactions
   const filteredTransactions = useMemo(() => {
     return transactions.filter((tx) => {
@@ -942,7 +1199,7 @@ export function DashboardPage() {
                 <span className="hidden sm:inline">Start From Zero</span>
               </button>
 
-              {/* Multi-Currency Selector */}
+              {/* Multi-Currency Selector + Live FX Sync */}
               <div className="relative flex items-center bg-zinc-900 border border-zinc-800 hover:border-indigo-500/40 rounded-xl px-2 sm:px-2.5 py-1.5">
                 <Globe className="w-3.5 h-3.5 text-indigo-400 mr-1 sm:mr-1.5 shrink-0" />
                 <select
@@ -957,7 +1214,53 @@ export function DashboardPage() {
                     </option>
                   ))}
                 </select>
+                <button
+                  type="button"
+                  onClick={() => handleSyncLiveFx(true)}
+                  title="Sync Live Exchange Rates"
+                  className="ml-1 text-zinc-400 hover:text-cyan-400 cursor-pointer"
+                >
+                  <RefreshCw className={`w-3 h-3 ${fxSyncing ? 'animate-spin text-cyan-400' : ''}`} />
+                </button>
               </div>
+
+              {/* Privacy Blur Toggle */}
+              <button
+                type="button"
+                onClick={togglePrivacyBlur}
+                title={privacyBlur ? 'Show Amounts' : 'Hide Amounts (Privacy Mode)'}
+                className={`p-2 rounded-xl border cursor-pointer transition-colors ${
+                  privacyBlur
+                    ? 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300'
+                    : 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-300'
+                }`}
+              >
+                {privacyBlur ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+
+              {/* 4-Digit PIN App Lock */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (savedPin) {
+                    setIsLocked(true)
+                  } else {
+                    setShowPinModal(true)
+                  }
+                }}
+                onContextMenu={(e) => {
+                  e.preventDefault()
+                  setShowPinModal(true)
+                }}
+                title={savedPin ? 'Lock App (Right-click to change PIN)' : 'Set 4-Digit App PIN'}
+                className={`p-2 rounded-xl border cursor-pointer transition-colors ${
+                  savedPin
+                    ? 'bg-zinc-900 hover:bg-zinc-800 border-indigo-500/35 text-indigo-300'
+                    : 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400'
+                }`}
+              >
+                {savedPin ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+              </button>
 
               <button
                 type="button"
@@ -993,6 +1296,27 @@ export function DashboardPage() {
              ========================================================= */}
           {activeTab === 'overview' && (
             <>
+              {/* Due Subscriptions Auto-Log Banner */}
+              {dueSubscriptions.length > 0 && (
+                <div className="rounded-2xl border border-amber-500/35 bg-amber-500/10 px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 text-xs sm:text-sm text-amber-200">
+                    <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span>
+                      <strong>{dueSubscriptions.length} recurring subscription(s)</strong> are due
+                      this month ({dueSubscriptions.map((s) => s.name).join(', ')}).
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleLogDueSubscriptions}
+                    disabled={loggingDueSubs}
+                    className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 text-xs font-bold cursor-pointer shrink-0 self-start sm:self-auto"
+                  >
+                    {loggingDueSubs ? 'Logging...' : 'Log All Due Now'}
+                  </button>
+                </div>
+              )}
+
               {/* Hero Safe-to-Spend Pulse Banner */}
               <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                 <div className="lg:col-span-2 relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-950/70 via-zinc-900 to-zinc-900 border border-indigo-500/30 p-5 sm:p-8 shadow-xl">
@@ -1482,6 +1806,28 @@ export function DashboardPage() {
                   >
                     <RotateCcw className="w-4 h-4" />
                     Start From Zero (Clear All)
+                  </button>
+                  <button
+                    onClick={() => setShowCsvModal(true)}
+                    className="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <FileSpreadsheet className="w-4 h-4 text-cyan-400" />
+                    Import CSV
+                  </button>
+                  <button
+                    onClick={() =>
+                      settings &&
+                      openPrintableMonthlyReport({
+                        settings,
+                        transactions,
+                        subscriptions,
+                        fmt: rawFmt,
+                      })
+                    }
+                    className="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Printer className="w-4 h-4 text-indigo-400" />
+                    PDF Report
                   </button>
                   <button
                     onClick={handleExportCsv}
@@ -2164,19 +2510,34 @@ export function DashboardPage() {
                 )}
 
                 {txReceiptImage && (
-                  <div className="relative rounded-xl overflow-hidden border border-zinc-700 bg-zinc-900">
-                    <img
-                      src={txReceiptImage}
-                      alt="Attached product or receipt"
-                      className="w-full max-h-48 object-contain bg-zinc-950"
-                    />
+                  <div className="space-y-2">
+                    <div className="relative rounded-xl overflow-hidden border border-zinc-700 bg-zinc-900">
+                      <img
+                        src={txReceiptImage}
+                        alt="Attached product or receipt"
+                        className="w-full max-h-48 object-contain bg-zinc-950"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setTxReceiptImage(null)}
+                        title="Remove photo"
+                        className="absolute top-2 right-2 p-1.5 rounded-lg bg-zinc-950/90 hover:bg-rose-500/80 text-white border border-zinc-700 cursor-pointer"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                     <button
                       type="button"
-                      onClick={() => setTxReceiptImage(null)}
-                      title="Remove photo"
-                      className="absolute top-2 right-2 p-1.5 rounded-lg bg-zinc-950/90 hover:bg-rose-500/80 text-white border border-zinc-700 cursor-pointer"
+                      onClick={handleAiScanReceipt}
+                      disabled={scanningReceipt}
+                      className="w-full py-2 px-3 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/35 border border-indigo-500/40 text-indigo-200 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
                     >
-                      <X className="w-3.5 h-3.5" />
+                      <Wand2 className={`w-3.5 h-3.5 text-cyan-400 ${scanningReceipt ? 'animate-spin' : ''}`} />
+                      {scanningReceipt
+                        ? 'Scanning Reçu with AI...'
+                        : activeAiModel
+                          ? `AI Scan & Auto-Fill (${activeAiModel.name})`
+                          : 'AI Scan & Auto-Fill (Add Model API in AI Budget)'}
                     </button>
                   </div>
                 )}
@@ -2610,6 +2971,180 @@ export function DashboardPage() {
               )}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* MODAL 7: CSV Bank Statement Import */}
+      {showCsvModal && (
+        <div className="fixed inset-0 z-50 bg-zinc-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-xl rounded-2xl bg-zinc-900 border border-zinc-800 p-5 sm:p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <FileSpreadsheet className="w-5 h-5 text-cyan-400" />
+                Import Bank / Expense CSV
+              </h3>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCsvModal(false)
+                  setCsvRows([])
+                }}
+                className="p-2 rounded-xl bg-zinc-800 text-zinc-300 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-400">
+              Upload any CSV with Date, Description/Title, and Amount columns. Categories are
+              auto-detected automatically.
+            </p>
+
+            <label className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-700 bg-zinc-950/60 p-5 cursor-pointer hover:border-indigo-500/50">
+              <Upload className="w-5 h-5 text-indigo-400" />
+              <span className="text-xs font-semibold text-zinc-200">Choose .CSV file</span>
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={handleCsvFileSelect}
+                className="hidden"
+              />
+            </label>
+
+            {csvRows.length > 0 && (
+              <div className="max-h-52 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/70 divide-y divide-zinc-800/80">
+                {csvRows.slice(0, 30).map((r, i) => (
+                  <div key={i} className="px-3 py-2 flex items-center justify-between text-xs">
+                    <div>
+                      <div className="font-semibold text-white">{r.title}</div>
+                      <div className="text-[11px] text-zinc-500">
+                        {r.tx_date} · {r.category}
+                      </div>
+                    </div>
+                    <span
+                      className={`font-bold ${
+                        r.tx_type === 'income' ? 'text-indigo-400' : 'text-rose-400'
+                      }`}
+                    >
+                      {r.tx_type === 'income' ? '+' : '-'}
+                      {r.amount.toFixed(2)} {activeCurrency}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCsvModal(false)
+                  setCsvRows([])
+                }}
+                className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={csvRows.length === 0 || csvImporting}
+                onClick={handleImportCsvConfirm}
+                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-xs font-bold text-white cursor-pointer"
+              >
+                {csvImporting ? 'Importing...' : `Import ${csvRows.length} Row(s)`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 8: 4-Digit PIN Setup */}
+      {showPinModal && (
+        <div className="fixed inset-0 z-50 bg-zinc-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <form
+            onSubmit={handleSavePin}
+            className="w-full max-w-sm rounded-2xl bg-zinc-900 border border-zinc-800 p-5 shadow-2xl space-y-4"
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <Lock className="w-4 h-4 text-indigo-400" />
+                {savedPin ? 'Manage App PIN' : 'Set 4-Digit App PIN'}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowPinModal(false)}
+                className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <input
+              type="password"
+              inputMode="numeric"
+              maxLength={4}
+              value={newPinInput}
+              onChange={(e) => setNewPinInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
+              placeholder="Enter 4-digit PIN (e.g. 1234)"
+              className="w-full rounded-xl bg-zinc-950 border border-zinc-700 px-3.5 py-2.5 text-center text-lg tracking-[0.5em] font-bold text-white"
+            />
+            <div className="flex justify-between gap-2">
+              {savedPin ? (
+                <button
+                  type="button"
+                  onClick={handleRemovePin}
+                  className="px-3 py-2 rounded-xl bg-rose-500/15 text-rose-300 text-xs font-bold cursor-pointer"
+                >
+                  Remove PIN
+                </button>
+              ) : (
+                <span />
+              )}
+              <button
+                type="submit"
+                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer"
+              >
+                Save PIN
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* PIN LOCK SCREEN OVERLAY */}
+      {isLocked && savedPin && (
+        <div className="fixed inset-0 z-[100] bg-zinc-950/95 backdrop-blur-xl flex items-center justify-center p-4">
+          <form
+            onSubmit={handleUnlockPin}
+            className="w-full max-w-xs rounded-3xl bg-zinc-900 border border-indigo-500/35 p-6 shadow-2xl text-center space-y-4"
+          >
+            <div className="mx-auto w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center">
+              <Lock className="w-6 h-6 text-indigo-400" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-white">KoinCLICK Locked</h2>
+              <p className="text-xs text-zinc-400 mt-0.5">Enter your 4-digit PIN to unlock</p>
+            </div>
+            <input
+              type="password"
+              inputMode="numeric"
+              maxLength={4}
+              autoFocus
+              value={pinEntry}
+              onChange={(e) => {
+                setPinError('')
+                setPinEntry(e.target.value.replace(/\D/g, '').slice(0, 4))
+              }}
+              placeholder="••••"
+              className="w-full rounded-xl bg-zinc-950 border border-zinc-700 px-3 py-3 text-center text-2xl tracking-[0.6em] font-bold text-white"
+            />
+            {pinError && <p className="text-xs text-rose-400">{pinError}</p>}
+            <button
+              type="submit"
+              className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold cursor-pointer"
+            >
+              Unlock
+            </button>
+          </form>
         </div>
       )}
     </div>

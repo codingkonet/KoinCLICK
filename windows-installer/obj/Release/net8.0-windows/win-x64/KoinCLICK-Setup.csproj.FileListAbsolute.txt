@@ -1,0 +1,15 @@
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\bin\Release\net8.0-windows\win-x64\KoinCLICK-Setup.exe
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\bin\Release\net8.0-windows\win-x64\KoinCLICK-Setup.deps.json
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\bin\Release\net8.0-windows\win-x64\KoinCLICK-Setup.runtimeconfig.json
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\bin\Release\net8.0-windows\win-x64\KoinCLICK-Setup.dll
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\bin\Release\net8.0-windows\win-x64\KoinCLICK-Setup.pdb
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\KoinCLICK-Setup.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\KoinCLICK-Setup.AssemblyInfoInputs.cache
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\KoinCLICK-Setup.AssemblyInfo.cs
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\KoinCLICK-Setup.csproj.CoreCompileInputs.cache
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\KoinCLICK-Setup.sourcelink.json
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\KoinCLICK-Setup.dll
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\refint\KoinCLICK-Setup.dll
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\KoinCLICK-Setup.pdb
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\KoinCLICK-Setup.genruntimeconfig.cache
+C:\Users\ouag\.gemini\antigravity\scratch\koinclick\windows-installer\obj\Release\net8.0-windows\win-x64\ref\KoinCLICK-Setup.dll

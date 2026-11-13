@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "86Wsg+REuFU=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ouag\\.gemini\\antigravity\\scratch\\koinclick\\windows-installer\\KoinCLICK-Setup.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ouag\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.31\\microsoft.net.illink.tasks.8.0.31.nupkg.sha512"
+  ],
+  "logs": []
+}

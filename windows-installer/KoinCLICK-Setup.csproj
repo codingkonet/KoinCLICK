@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>KoinCLICK-Setup</AssemblyName>
+    <Product>KoinCLICK Setup</Product>
+    <Company>KoinCLICK</Company>
+    <Copyright>© 2026 KoinCLICK. All rights reserved.</Copyright>
+    <Version>1.0.0</Version>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="payload.zip" LogicalName="KoinCLICK.payload.zip" />
+  </ItemGroup>
+
+</Project>
