@@ -7,6 +7,7 @@ import {
   type KoinSubscription,
   type KoinAiModel,
   type KoinAiBudget,
+  type KoinTontine,
 } from '../lib/supabase'
 import {
   SUPPORTED_CURRENCIES,
@@ -22,6 +23,7 @@ import { useAuth } from '../context/AuthContext'
 import { ensureStarterData } from '../lib/seedUserData'
 import { AdminControlPanel } from '../components/AdminControlPanel'
 import { AiBudgetPanel } from '../components/AiBudgetPanel'
+import { TontinePanel } from '../components/TontinePanel'
 import {
   Coins,
   Zap,
@@ -58,6 +60,7 @@ import {
   FileSpreadsheet,
   Printer,
   Wand2,
+  Users,
 } from 'lucide-react'
 
 const CATEGORIES = [
@@ -85,10 +88,11 @@ export function DashboardPage() {
   const [subscriptions, setSubscriptions] = useState<KoinSubscription[]>([])
   const [aiModels, setAiModels] = useState<KoinAiModel[]>([])
   const [aiBudgets, setAiBudgets] = useState<KoinAiBudget[]>([])
+  const [tontines, setTontines] = useState<KoinTontine[]>([])
   const [toast, setToast] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<'overview' | 'transactions' | 'radar' | 'ai' | 'admin'>(
-    'overview'
-  )
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'transactions' | 'radar' | 'tontine' | 'ai' | 'admin'
+  >('overview')
 
   // Active Display Currency (stored in settings.currency, defaults to USD)
   const activeCurrency = settings?.currency || 'USD'
@@ -254,31 +258,37 @@ export function DashboardPage() {
       user.user_metadata?.full_name || user.email?.split('@')[0] || 'Koin Master'
     )
 
-    const [settingsRes, padsRes, txRes, subsRes, aiModelsRes, aiBudgetsRes] = await Promise.all([
-      supabase.from('koinclick_settings').select('*').eq('user_id', user.id).single(),
-      supabase.from('koinclick_clickpads').select('*').eq('user_id', user.id).order('id'),
-      supabase
-        .from('koinclick_transactions')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('tx_date', { ascending: false })
-        .limit(200),
-      supabase
-        .from('koinclick_subscriptions')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('billing_day'),
-      supabase
-        .from('koinclick_ai_models')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false }),
-      supabase
-        .from('koinclick_ai_budgets')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('category'),
-    ])
+    const [settingsRes, padsRes, txRes, subsRes, aiModelsRes, aiBudgetsRes, tontinesRes] =
+      await Promise.all([
+        supabase.from('koinclick_settings').select('*').eq('user_id', user.id).single(),
+        supabase.from('koinclick_clickpads').select('*').eq('user_id', user.id).order('id'),
+        supabase
+          .from('koinclick_transactions')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('tx_date', { ascending: false })
+          .limit(200),
+        supabase
+          .from('koinclick_subscriptions')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('billing_day'),
+        supabase
+          .from('koinclick_ai_models')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('koinclick_ai_budgets')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('category'),
+        supabase
+          .from('koinclick_tontines')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false }),
+      ])
 
     if (settingsRes.data) {
       setSettings(settingsRes.data)
@@ -294,6 +304,7 @@ export function DashboardPage() {
     if (subsRes.data) setSubscriptions(subsRes.data)
     if (aiModelsRes.data) setAiModels(aiModelsRes.data)
     if (aiBudgetsRes.data) setAiBudgets(aiBudgetsRes.data)
+    if (tontinesRes.data) setTontines(tontinesRes.data)
 
     setLoading(false)
   }, [user])
@@ -1168,6 +1179,7 @@ export function DashboardPage() {
                   { id: 'overview', label: 'Pulse & Overview' },
                   { id: 'transactions', label: `Transactions (${transactions.length})` },
                   { id: 'radar', label: `Subscriptions (${subscriptions.length})` },
+                  { id: 'tontine', label: `Tontine (${tontines.length})` },
                   { id: 'ai', label: 'AI Budget' },
                   ...(isAdmin ? ([{ id: 'admin', label: 'Admin Control' }] as const) : []),
                 ] as const
@@ -2126,6 +2138,47 @@ export function DashboardPage() {
           )}
 
           {/* =========================================================
+              TAB 3.4: TONTINE / DARET SAVINGS CIRCLES
+             ========================================================= */}
+          {activeTab === 'tontine' && user && (
+            <TontinePanel
+              userId={user.id}
+              tontines={tontines}
+              setTontines={setTontines}
+              activeCurrency={activeCurrency}
+              fmt={fmt}
+              toDisplay={toDisplay}
+              showToast={showToast}
+              onLogTontineTx={async ({ title, emoji, amountUsd, txType, notes }) => {
+                const { data, error } = await supabase
+                  .from('koinclick_transactions')
+                  .insert({
+                    user_id: user.id,
+                    jar_id: null,
+                    title,
+                    emoji,
+                    amount: amountUsd,
+                    tx_type: txType,
+                    category: txType === 'income' ? 'Salary / Income' : 'Utilities & Bills',
+                    source: 'manual',
+                    notes,
+                    tx_date: new Date().toISOString(),
+                  })
+                  .select('*')
+                  .single()
+                if (!error && data) {
+                  setTransactions((prev) => [data, ...prev])
+                  showToast(
+                    txType === 'income'
+                      ? `🎉 Logged Tontine pot (+${rawFmt(amountUsd)})`
+                      : `🤝 Logged Tontine share (-${rawFmt(amountUsd)})`
+                  )
+                }
+              }}
+            />
+          )}
+
+          {/* =========================================================
               TAB 3.5: AI BUDGET MANAGEMENT & USER MODEL APIS
              ========================================================= */}
           {activeTab === 'ai' && user && settings && (
@@ -2186,6 +2239,12 @@ export function DashboardPage() {
             { id: 'overview', label: 'Overview', icon: BarChart3, count: null },
             { id: 'transactions', label: 'Transactions', icon: Receipt, count: transactions.length },
             { id: 'radar', label: 'Subs', icon: Calendar, count: subscriptions.length },
+            {
+              id: 'tontine',
+              label: 'Tontine',
+              icon: Users,
+              count: tontines.filter((t) => t.status === 'active').length || null,
+            },
             {
               id: 'ai',
               label: 'AI Budget',

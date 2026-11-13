@@ -101,3 +101,28 @@ export interface KoinAiBudget {
   ai_notes?: string | null
   updated_at?: string
 }
+
+export interface TontineMember {
+  name: string
+  round: number
+  paidCurrentRound: boolean
+  receivedPot: boolean
+}
+
+export interface KoinTontine {
+  id: number
+  user_id: string
+  name: string
+  emoji: string
+  contribution_amount: number
+  frequency: 'weekly' | 'biweekly' | 'monthly'
+  total_members: number
+  current_round: number
+  my_turn_round: number
+  start_date: string
+  next_due_date: string
+  members: TontineMember[]
+  status: 'active' | 'completed' | 'paused'
+  notes?: string | null
+  created_at?: string
+}
