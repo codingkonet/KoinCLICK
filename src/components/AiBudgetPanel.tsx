@@ -402,25 +402,25 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Hero Banner: AI Budget Strategist */}
-      <div className="rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-zinc-900 via-zinc-900 to-indigo-950/50 p-4 sm:p-6 shadow-lg shadow-indigo-950/20">
+      <div className="rounded-2xl border border-teal-700/25 bg-white shadow-sm p-4 sm:p-6 shadow-lg shadow-stone-900/5">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 px-2.5 py-0.5 text-xs font-semibold text-indigo-300">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-700/10 border border-teal-700/25 px-2.5 py-0.5 text-xs font-semibold text-teal-800">
+                <Sparkles className="w-3.5 h-3.5 text-teal-700" />
                 AI Budget Management
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-800 border border-zinc-700 px-2.5 py-0.5 text-xs text-zinc-300">
-                <Cpu className="w-3.5 h-3.5 text-indigo-400" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 border border-stone-300 px-2.5 py-0.5 text-xs text-stone-700">
+                <Cpu className="w-3.5 h-3.5 text-teal-700" />
                 {effectiveModel
                   ? `${effectiveModel.name} (${effectiveModel.model_id})`
                   : 'Local Smart Engine (Add API below)'}
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">
               AI Cashflow & Budget Strategist
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl">
+            <p className="text-xs sm:text-sm text-stone-500 max-w-2xl">
               {displayedAnalysis.summary}
             </p>
           </div>
@@ -430,7 +430,7 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
               <select
                 value={effectiveModel?.id || ''}
                 onChange={(e) => setSelectedModelId(Number(e.target.value) || null)}
-                className="rounded-xl bg-zinc-950 border border-zinc-700 px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-indigo-500"
+                className="rounded-xl bg-[#F6F4EF] border border-stone-300 px-3 py-2 text-xs text-stone-800 focus:outline-none focus:border-teal-700"
               >
                 {activeModels.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -442,7 +442,7 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
             <button
               onClick={handleRunAnalysis}
               disabled={analyzing}
-              className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-md shadow-indigo-950/50 transition cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl bg-teal-700 hover:bg-teal-800 disabled:opacity-60 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-md shadow-stone-900/10 transition cursor-pointer"
             >
               {analyzing ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -455,29 +455,29 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
         </div>
 
         {analysisError && (
-          <div className="mt-3 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3.5 py-2 text-xs text-rose-300">
+          <div className="mt-3 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3.5 py-2 text-xs text-rose-700">
             {analysisError}
           </div>
         )}
 
         {/* KPI Cards */}
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="rounded-xl bg-zinc-950/70 border border-zinc-800 p-3.5">
-            <div className="text-[11px] uppercase tracking-wider text-zinc-400">
+          <div className="rounded-xl bg-stone-50 border border-stone-200 p-3.5">
+            <div className="text-[11px] uppercase tracking-wider text-stone-500">
               AI Budget Health Score
             </div>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold text-white">
+              <span className="text-2xl font-extrabold text-stone-900">
                 {displayedAnalysis.healthScore}
               </span>
-              <span className="text-xs text-zinc-400">/ 100</span>
+              <span className="text-xs text-stone-500">/ 100</span>
               <span
                 className={`ml-auto text-xs font-semibold px-2 py-0.5 rounded-full ${
                   displayedAnalysis.healthScore >= 75
-                    ? 'bg-cyan-500/15 text-cyan-300'
+                    ? 'bg-teal-700/10 text-teal-800'
                     : displayedAnalysis.healthScore >= 55
-                      ? 'bg-amber-500/15 text-amber-300'
-                      : 'bg-rose-500/15 text-rose-300'
+                      ? 'bg-amber-500/15 text-amber-700'
+                      : 'bg-rose-500/15 text-rose-700'
                 }`}
               >
                 {displayedAnalysis.healthScore >= 75
@@ -489,32 +489,32 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
             </div>
           </div>
 
-          <div className="rounded-xl bg-zinc-950/70 border border-zinc-800 p-3.5">
-            <div className="text-[11px] uppercase tracking-wider text-zinc-400">
+          <div className="rounded-xl bg-stone-50 border border-stone-200 p-3.5">
+            <div className="text-[11px] uppercase tracking-wider text-stone-500">
               Safe Daily Spend
             </div>
-            <div className="mt-1 text-2xl font-extrabold text-cyan-400">
+            <div className="mt-1 text-2xl font-extrabold text-teal-700">
               {formatMoney(displayedAnalysis.safeDailySpend)}
             </div>
-            <div className="text-[11px] text-zinc-500 mt-0.5">
+            <div className="text-[11px] text-stone-500 mt-0.5">
               Remaining month daily allowance
             </div>
           </div>
 
-          <div className="rounded-xl bg-zinc-950/70 border border-zinc-800 p-3.5">
-            <div className="text-[11px] uppercase tracking-wider text-zinc-400">
+          <div className="rounded-xl bg-stone-50 border border-stone-200 p-3.5">
+            <div className="text-[11px] uppercase tracking-wider text-stone-500">
               Projected Monthly Savings
             </div>
             <div
               className={`mt-1 text-2xl font-extrabold ${
                 displayedAnalysis.projectedMonthlySavings >= 0
-                  ? 'text-indigo-300'
-                  : 'text-rose-400'
+                  ? 'text-teal-800'
+                  : 'text-rose-600'
               }`}
             >
               {formatMoney(displayedAnalysis.projectedMonthlySavings)}
             </div>
-            <div className="text-[11px] text-zinc-500 mt-0.5">
+            <div className="text-[11px] text-stone-500 mt-0.5">
               Source: {displayedAnalysis.isLiveAi ? displayedAnalysis.usedModelLabel : 'Local Engine'}
             </div>
           </div>
@@ -525,11 +525,11 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
             {displayedAnalysis.alerts.length > 0 && (
               <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-3.5 space-y-1.5">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-300">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-700">
                   <AlertTriangle className="w-4 h-4" />
                   Spending Alerts
                 </div>
-                <ul className="space-y-1 text-xs text-zinc-300">
+                <ul className="space-y-1 text-xs text-stone-700">
                   {displayedAnalysis.alerts.map((a, idx) => (
                     <li key={idx}>• {a}</li>
                   ))}
@@ -537,12 +537,12 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
               </div>
             )}
 
-            <div className="rounded-xl border border-indigo-500/25 bg-indigo-500/5 p-3.5 space-y-1.5">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-indigo-300">
-                <TrendingUp className="w-4 h-4 text-cyan-400" />
+            <div className="rounded-xl border border-teal-700/20 bg-teal-50/60 p-3.5 space-y-1.5">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-teal-800">
+                <TrendingUp className="w-4 h-4 text-teal-700" />
                 Actionable AI Tips
               </div>
-              <ul className="space-y-1 text-xs text-zinc-300">
+              <ul className="space-y-1 text-xs text-stone-700">
                 {displayedAnalysis.tips.map((t, idx) => (
                   <li key={idx}>• {t}</li>
                 ))}
@@ -555,11 +555,11 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
       {/* Middle Grid: Category Budget Caps + AI Advisor Q&A */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Category Budget Caps */}
-        <div className="lg:col-span-7 rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4 sm:p-5 space-y-4">
+        <div className="lg:col-span-7 rounded-2xl border border-stone-200 bg-white p-4 sm:p-5 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h3 className="text-base font-bold text-white">Category Budget Caps</h3>
-              <p className="text-xs text-zinc-400">
+              <h3 className="text-base font-bold text-stone-900">Category Budget Caps</h3>
+              <p className="text-xs text-stone-500">
                 Track monthly limits per category or apply AI-recommended caps
               </p>
             </div>
@@ -567,9 +567,9 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
               <button
                 onClick={handleApplyAllRecommendations}
                 disabled={savingBudget}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-indigo-500/30 px-3 py-1.5 text-xs font-semibold text-indigo-300 transition cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 border border-teal-700/25 px-3 py-1.5 text-xs font-semibold text-teal-800 transition cursor-pointer"
               >
-                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                <Sparkles className="w-3.5 h-3.5 text-teal-700" />
                 Apply AI Caps
               </button>
               <button
@@ -579,7 +579,7 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                   setBudgetThreshold('80')
                   setShowBudgetForm((v) => !v)
                 }}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 text-xs font-semibold text-white transition cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-teal-700 hover:bg-teal-800 px-3 py-1.5 text-xs font-semibold text-white transition cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Add Cap
@@ -590,14 +590,14 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
           {showBudgetForm && (
             <form
               onSubmit={handleSaveBudgetCap}
-              className="rounded-xl border border-indigo-500/30 bg-zinc-950/80 p-3.5 grid grid-cols-1 sm:grid-cols-4 gap-2.5 items-end"
+              className="rounded-xl border border-teal-700/25 bg-stone-50 p-3.5 grid grid-cols-1 sm:grid-cols-4 gap-2.5 items-end"
             >
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Category</label>
+                <label className="block text-[11px] text-stone-500 mb-1">Category</label>
                 <select
                   value={budgetCat}
                   onChange={(e) => setBudgetCat(e.target.value)}
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-2.5 py-2 text-xs text-white"
+                  className="w-full rounded-lg bg-white border border-stone-300 px-2.5 py-2 text-xs text-stone-900"
                 >
                   {DEFAULT_CATEGORIES.map((c) => (
                     <option key={c} value={c}>
@@ -607,30 +607,30 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Monthly Limit</label>
+                <label className="block text-[11px] text-stone-500 mb-1">Monthly Limit</label>
                 <input
                   type="number"
                   step="0.01"
                   value={budgetLimit}
                   onChange={(e) => setBudgetLimit(e.target.value)}
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-2.5 py-2 text-xs text-white"
+                  className="w-full rounded-lg bg-white border border-stone-300 px-2.5 py-2 text-xs text-stone-900"
                 />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Alert At (%)</label>
+                <label className="block text-[11px] text-stone-500 mb-1">Alert At (%)</label>
                 <input
                   type="number"
                   min={10}
                   max={100}
                   value={budgetThreshold}
                   onChange={(e) => setBudgetThreshold(e.target.value)}
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-2.5 py-2 text-xs text-white"
+                  className="w-full rounded-lg bg-white border border-stone-300 px-2.5 py-2 text-xs text-stone-900"
                 />
               </div>
               <button
                 type="submit"
                 disabled={savingBudget}
-                className="rounded-lg bg-indigo-600 hover:bg-indigo-500 px-3 py-2 text-xs font-semibold text-white cursor-pointer"
+                className="rounded-lg bg-teal-700 hover:bg-teal-800 px-3 py-2 text-xs font-semibold text-white cursor-pointer"
               >
                 {savingBudget ? 'Saving...' : 'Save Cap'}
               </button>
@@ -638,10 +638,10 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
           )}
 
           {aiBudgets.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-950/40 p-6 text-center space-y-2">
-              <p className="text-sm font-medium text-zinc-300">No Category Caps Configured Yet</p>
-              <p className="text-xs text-zinc-500">
-                Click <span className="text-indigo-400 font-semibold">Apply AI Caps</span> to
+            <div className="rounded-xl border border-dashed border-stone-300 bg-stone-100/70 p-6 text-center space-y-2">
+              <p className="text-sm font-medium text-stone-700">No Category Caps Configured Yet</p>
+              <p className="text-xs text-stone-500">
+                Click <span className="text-teal-700 font-semibold">Apply AI Caps</span> to
                 auto-generate smart monthly limits based on your income and spending.
               </p>
             </div>
@@ -657,23 +657,23 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                 return (
                   <div
                     key={b.id}
-                    className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-3 space-y-2"
+                    className="rounded-xl border border-stone-200 bg-stone-50 p-3 space-y-2"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div>
-                        <span className="text-sm font-semibold text-white">{b.category}</span>
+                        <span className="text-sm font-semibold text-stone-900">{b.category}</span>
                         {b.ai_notes && (
-                          <p className="text-[11px] text-zinc-400 line-clamp-1">{b.ai_notes}</p>
+                          <p className="text-[11px] text-stone-500 line-clamp-1">{b.ai_notes}</p>
                         )}
                       </div>
                       <div className="flex items-center gap-2">
                         <span
                           className={`text-xs font-semibold ${
                             isOver
-                              ? 'text-rose-400'
+                              ? 'text-rose-600'
                               : isWarn
-                                ? 'text-amber-300'
-                                : 'text-zinc-300'
+                                ? 'text-amber-700'
+                                : 'text-stone-700'
                           }`}
                         >
                           {formatMoney(spent)} / {formatMoney(limit)}
@@ -681,20 +681,20 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                         <button
                           onClick={() => handleDeleteBudgetCap(b.id)}
                           title="Delete cap"
-                          className="p-1 text-zinc-500 hover:text-rose-400 transition cursor-pointer"
+                          className="p-1 text-stone-500 hover:text-rose-600 transition cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
-                    <div className="h-2 w-full rounded-full bg-zinc-800 overflow-hidden">
+                    <div className="h-2 w-full rounded-full bg-stone-100 overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${
                           isOver
                             ? 'bg-rose-500'
                             : isWarn
                               ? 'bg-amber-400'
-                              : 'bg-gradient-to-r from-indigo-500 to-cyan-400'
+                              : 'bg-gradient-to-r from-teal-700 to-teal-500'
                         }`}
                         style={{ width: `${pct}%` }}
                       />
@@ -707,14 +707,14 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
         </div>
 
         {/* AI Budget Advisor Chat */}
-        <div className="lg:col-span-5 rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4 sm:p-5 flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-5 rounded-2xl border border-stone-200 bg-white p-4 sm:p-5 flex flex-col justify-between space-y-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Bot className="w-5 h-5 text-indigo-400" />
-                <h3 className="text-base font-bold text-white">AI Budget Advisor</h3>
+                <Bot className="w-5 h-5 text-teal-700" />
+                <h3 className="text-base font-bold text-stone-900">AI Budget Advisor</h3>
               </div>
-              <span className="text-[11px] text-zinc-400">
+              <span className="text-[11px] text-stone-500">
                 {effectiveModel ? effectiveModel.model_id : 'Local Engine'}
               </span>
             </div>
@@ -729,7 +729,7 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                   key={prompt}
                   onClick={() => handleAskAdvisor(prompt)}
                   disabled={asking}
-                  className="rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-2.5 py-1 text-[11px] text-zinc-300 transition cursor-pointer"
+                  className="rounded-lg bg-stone-100 hover:bg-stone-200 border border-stone-300 px-2.5 py-1 text-[11px] text-stone-700 transition cursor-pointer"
                 >
                   {prompt}
                 </button>
@@ -738,7 +738,7 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
 
             <div className="space-y-2.5 max-h-64 overflow-y-auto pr-1">
               {qaHistory.length === 0 ? (
-                <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-4 text-xs text-zinc-400">
+                <div className="rounded-xl border border-stone-200 bg-stone-50 p-4 text-xs text-stone-500">
                   Ask anything about your spending, subscriptions, or savings target. Uses your
                   selected Model API when connected.
                 </div>
@@ -746,13 +746,13 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                 qaHistory.map((item, idx) => (
                   <div
                     key={idx}
-                    className="rounded-xl border border-zinc-800 bg-zinc-950/70 p-3 space-y-1.5"
+                    className="rounded-xl border border-stone-200 bg-stone-50 p-3 space-y-1.5"
                   >
-                    <div className="text-xs font-semibold text-indigo-300">You: {item.q}</div>
-                    <div className="text-xs text-zinc-200 whitespace-pre-line leading-relaxed">
+                    <div className="text-xs font-semibold text-teal-800">You: {item.q}</div>
+                    <div className="text-xs text-stone-800 whitespace-pre-line leading-relaxed">
                       {item.a}
                     </div>
-                    <div className="text-[10px] text-zinc-500">
+                    <div className="text-[10px] text-stone-500">
                       {item.isLive ? '⚡ Live AI' : '🧠 Local'} · {item.model}
                     </div>
                   </div>
@@ -773,12 +773,12 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask your AI budget advisor..."
-              className="flex-1 rounded-xl bg-zinc-950 border border-zinc-700 px-3 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500"
+              className="flex-1 rounded-xl bg-[#F6F4EF] border border-stone-300 px-3 py-2 text-xs text-stone-900 placeholder-stone-400 focus:outline-none focus:border-teal-700"
             />
             <button
               type="submit"
               disabled={asking || !question.trim()}
-              className="inline-flex items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 p-2.5 text-white transition cursor-pointer"
+              className="inline-flex items-center justify-center rounded-xl bg-teal-700 hover:bg-teal-800 disabled:opacity-50 p-2.5 text-white transition cursor-pointer"
             >
               {asking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             </button>
@@ -787,20 +787,20 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
       </div>
 
       {/* User Panel: AI Model APIs Manager */}
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4 sm:p-5 space-y-4">
+      <div className="rounded-2xl border border-stone-200 bg-white p-4 sm:p-5 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <KeyRound className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-base font-bold text-white">Your AI Model APIs</h3>
+              <KeyRound className="w-4 h-4 text-teal-700" />
+              <h3 className="text-base font-bold text-stone-900">Your AI Model APIs</h3>
             </div>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-stone-500">
               Connect your own Gemini, OpenAI, Anthropic, Groq, OpenRouter, or custom model API keys
             </p>
           </div>
           <button
             onClick={openAddModelForm}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-3.5 py-2 text-xs font-semibold text-white transition cursor-pointer self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-teal-700 hover:bg-teal-800 px-3.5 py-2 text-xs font-semibold text-white transition cursor-pointer self-start sm:self-auto"
           >
             <Plus className="w-4 h-4" />
             Add Model API
@@ -811,34 +811,34 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
         {showModelForm && (
           <form
             onSubmit={handleSaveModel}
-            className="rounded-xl border border-indigo-500/35 bg-zinc-950/90 p-4 space-y-3"
+            className="rounded-xl border border-teal-700/25 bg-[#F6F4EF]/95 p-4 space-y-3"
           >
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-bold text-white">
+              <h4 className="text-sm font-bold text-stone-900">
                 {editingModel ? 'Edit AI Model API' : 'Add AI Model API'}
               </h4>
               <button
                 type="button"
                 onClick={() => setShowModelForm(false)}
-                className="text-xs text-zinc-400 hover:text-white cursor-pointer"
+                className="text-xs text-stone-500 hover:text-stone-900 cursor-pointer"
               >
                 Cancel
               </button>
             </div>
 
             {modelError && (
-              <div className="rounded-lg bg-rose-500/10 border border-rose-500/30 px-3 py-2 text-xs text-rose-300">
+              <div className="rounded-lg bg-rose-500/10 border border-rose-500/30 px-3 py-2 text-xs text-rose-700">
                 {modelError}
               </div>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Provider</label>
+                <label className="block text-[11px] text-stone-500 mb-1">Provider</label>
                 <select
                   value={modelProvider}
                   onChange={(e) => handleProviderChange(e.target.value as AiProvider)}
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs text-white"
+                  className="w-full rounded-lg bg-white border border-stone-300 px-3 py-2 text-xs text-stone-900"
                 >
                   {Object.values(AI_PROVIDER_PRESETS).map((p) => (
                     <option key={p.provider} value={p.provider}>
@@ -849,24 +849,24 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Display Label</label>
+                <label className="block text-[11px] text-stone-500 mb-1">Display Label</label>
                 <input
                   type="text"
                   value={modelName}
                   onChange={(e) => setModelName(e.target.value)}
                   placeholder="e.g. My Gemini Flash"
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs text-white"
+                  className="w-full rounded-lg bg-white border border-stone-300 px-3 py-2 text-xs text-stone-900"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Model ID</label>
+                <label className="block text-[11px] text-stone-500 mb-1">Model ID</label>
                 <input
                   type="text"
                   value={modelIdInput}
                   onChange={(e) => setModelIdInput(e.target.value)}
                   placeholder="e.g. gemini-2.5-flash"
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs text-white"
+                  className="w-full rounded-lg bg-white border border-stone-300 px-3 py-2 text-xs text-stone-900"
                 />
                 <div className="mt-1 flex flex-wrap gap-1">
                   {AI_PROVIDER_PRESETS[modelProvider].suggestedModels.map((sm) => (
@@ -874,7 +874,7 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                       type="button"
                       key={sm}
                       onClick={() => setModelIdInput(sm)}
-                      className="rounded bg-zinc-800 hover:bg-zinc-700 px-1.5 py-0.5 text-[10px] text-zinc-300 cursor-pointer"
+                      className="rounded bg-stone-100 hover:bg-stone-200 px-1.5 py-0.5 text-[10px] text-stone-700 cursor-pointer"
                     >
                       {sm}
                     </button>
@@ -883,18 +883,18 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-[11px] text-zinc-400 mb-1">API Key</label>
+                <label className="block text-[11px] text-stone-500 mb-1">API Key</label>
                 <input
                   type="password"
                   value={modelApiKey}
                   onChange={(e) => setModelApiKey(e.target.value)}
                   placeholder={AI_PROVIDER_PRESETS[modelProvider].placeholderKey}
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs text-white font-mono"
+                  className="w-full rounded-lg bg-white border border-stone-300 px-3 py-2 text-xs text-stone-900 font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">
+                <label className="block text-[11px] text-stone-500 mb-1">
                   Monthly API Cap ($)
                 </label>
                 <input
@@ -903,12 +903,12 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                   min="0"
                   value={modelMonthlyCap}
                   onChange={(e) => setModelMonthlyCap(e.target.value)}
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs text-white"
+                  className="w-full rounded-lg bg-white border border-stone-300 px-3 py-2 text-xs text-stone-900"
                 />
               </div>
 
               <div className="sm:col-span-2 lg:col-span-3">
-                <label className="block text-[11px] text-zinc-400 mb-1">
+                <label className="block text-[11px] text-stone-500 mb-1">
                   Base URL (Optional / Custom Endpoint)
                 </label>
                 <input
@@ -916,7 +916,7 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                   value={modelBaseUrl}
                   onChange={(e) => setModelBaseUrl(e.target.value)}
                   placeholder="https://api.openai.com/v1"
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs text-zinc-300 font-mono"
+                  className="w-full rounded-lg bg-white border border-stone-300 px-3 py-2 text-xs text-stone-700 font-mono"
                 />
               </div>
             </div>
@@ -925,7 +925,7 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
               <button
                 type="submit"
                 disabled={savingModel}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2 text-xs font-semibold text-white cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-teal-700 hover:bg-teal-800 px-4 py-2 text-xs font-semibold text-white cursor-pointer"
               >
                 {savingModel ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                 {editingModel ? 'Update Model API' : 'Save Model API'}
@@ -936,9 +936,9 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
 
         {/* Saved Model APIs List */}
         {aiModels.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-950/40 p-6 text-center space-y-1.5">
-            <p className="text-sm font-medium text-zinc-300">No AI Model APIs Added Yet</p>
-            <p className="text-xs text-zinc-500">
+          <div className="rounded-xl border border-dashed border-stone-300 bg-stone-100/70 p-6 text-center space-y-1.5">
+            <p className="text-sm font-medium text-stone-700">No AI Model APIs Added Yet</p>
+            <p className="text-xs text-stone-500">
               Add a Gemini, OpenAI, Anthropic, Groq, or OpenRouter API key to power live AI budget
               forecasting and Q&A.
             </p>
@@ -953,32 +953,32 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                   key={m.id}
                   className={`rounded-xl border p-3.5 space-y-2.5 transition ${
                     m.is_default
-                      ? 'border-indigo-500/50 bg-indigo-950/20'
-                      : 'border-zinc-800 bg-zinc-950/60'
+                      ? 'border-teal-700/35 bg-teal-50/70'
+                      : 'border-stone-200 bg-stone-50'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-white">{m.name}</span>
+                        <span className="text-sm font-bold text-stone-900">{m.name}</span>
                         {m.is_default && (
-                          <span className="rounded-full bg-indigo-500/20 border border-indigo-400/30 px-2 py-0.5 text-[10px] font-semibold text-indigo-300">
+                          <span className="rounded-full bg-teal-700/10 border border-teal-700/25 px-2 py-0.5 text-[10px] font-semibold text-teal-800">
                             Default
                           </span>
                         )}
                         <span
                           className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                             m.is_active
-                              ? 'bg-cyan-500/15 text-cyan-300'
-                              : 'bg-zinc-800 text-zinc-500'
+                              ? 'bg-teal-700/10 text-teal-800'
+                              : 'bg-stone-100 text-stone-500'
                           }`}
                         >
                           {m.is_active ? 'Active' : 'Paused'}
                         </span>
                       </div>
-                      <div className="text-xs text-zinc-400 mt-0.5">
+                      <div className="text-xs text-stone-500 mt-0.5">
                         {AI_PROVIDER_PRESETS[m.provider]?.label || m.provider} ·{' '}
-                        <span className="font-mono text-zinc-300">{m.model_id}</span>
+                        <span className="font-mono text-stone-700">{m.model_id}</span>
                       </div>
                     </div>
 
@@ -988,8 +988,8 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                         title="Set as default model"
                         className={`p-1.5 rounded-lg transition cursor-pointer ${
                           m.is_default
-                            ? 'text-amber-400 bg-amber-400/10'
-                            : 'text-zinc-500 hover:text-amber-300'
+                            ? 'text-amber-600 bg-amber-400/10'
+                            : 'text-stone-500 hover:text-amber-700'
                         }`}
                       >
                         <Star className="w-3.5 h-3.5" />
@@ -997,15 +997,15 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                       <button
                         onClick={() => handleDeleteModel(m.id)}
                         title="Delete model"
-                        className="p-1.5 rounded-lg text-zinc-500 hover:text-rose-400 transition cursor-pointer"
+                        className="p-1.5 rounded-lg text-stone-500 hover:text-rose-600 transition cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-2 rounded-lg bg-zinc-900/90 border border-zinc-800 px-2.5 py-1.5">
-                    <span className="text-[11px] font-mono text-zinc-300 truncate">
+                  <div className="flex items-center justify-between gap-2 rounded-lg bg-white border border-stone-200 px-2.5 py-1.5">
+                    <span className="text-[11px] font-mono text-stone-700 truncate">
                       {revealed ? m.api_key : maskKey(m.api_key)}
                     </span>
                     <button
@@ -1013,7 +1013,7 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                       onClick={() =>
                         setRevealedKeys((prev) => ({ ...prev, [m.id]: !prev[m.id] }))
                       }
-                      className="text-zinc-400 hover:text-white cursor-pointer"
+                      className="text-stone-500 hover:text-stone-900 cursor-pointer"
                     >
                       {revealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                     </button>
@@ -1025,31 +1025,31 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                         type="button"
                         onClick={() => handleTestModel(m)}
                         disabled={testingModelId === m.id}
-                        className="inline-flex items-center gap-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 px-2.5 py-1 text-[11px] font-medium text-zinc-200 cursor-pointer"
+                        className="inline-flex items-center gap-1 rounded-lg bg-stone-100 hover:bg-stone-200 px-2.5 py-1 text-[11px] font-medium text-stone-800 cursor-pointer"
                       >
                         {testingModelId === m.id ? (
                           <Loader2 className="w-3 h-3 animate-spin" />
                         ) : (
-                          <Zap className="w-3 h-3 text-cyan-400" />
+                          <Zap className="w-3 h-3 text-teal-700" />
                         )}
                         Test API
                       </button>
                       <button
                         type="button"
                         onClick={() => handleToggleModelActive(m)}
-                        className="rounded-lg bg-zinc-800 hover:bg-zinc-700 px-2.5 py-1 text-[11px] font-medium text-zinc-300 cursor-pointer"
+                        className="rounded-lg bg-stone-100 hover:bg-stone-200 px-2.5 py-1 text-[11px] font-medium text-stone-700 cursor-pointer"
                       >
                         {m.is_active ? 'Pause' : 'Enable'}
                       </button>
                       <button
                         type="button"
                         onClick={() => openEditModelForm(m)}
-                        className="rounded-lg bg-zinc-800 hover:bg-zinc-700 px-2.5 py-1 text-[11px] font-medium text-zinc-300 cursor-pointer"
+                        className="rounded-lg bg-stone-100 hover:bg-stone-200 px-2.5 py-1 text-[11px] font-medium text-stone-700 cursor-pointer"
                       >
                         Edit
                       </button>
                     </div>
-                    <span className="text-[11px] text-zinc-500">
+                    <span className="text-[11px] text-stone-500">
                       Cap: ${Number(m.monthly_budget || 0).toFixed(0)}/mo
                     </span>
                   </div>
@@ -1058,8 +1058,8 @@ export const AiBudgetPanel: React.FC<AiBudgetPanelProps> = ({
                     <div
                       className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] ${
                         testRes.ok
-                          ? 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/25'
-                          : 'bg-rose-500/10 text-rose-300 border border-rose-500/25'
+                          ? 'bg-teal-50 text-teal-800 border border-teal-700/20'
+                          : 'bg-rose-500/10 text-rose-700 border border-rose-500/25'
                       }`}
                     >
                       {testRes.ok ? (

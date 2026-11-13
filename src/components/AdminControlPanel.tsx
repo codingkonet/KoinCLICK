@@ -405,16 +405,16 @@ export function AdminControlPanel({
       <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-br from-amber-950/50 via-zinc-900 to-zinc-900 border border-amber-500/30 p-4 sm:p-6 lg:p-8 shadow-xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 text-xs font-bold mb-2">
               <Shield className="w-3.5 h-3.5" />
               KoinCLICK Admin Suite
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white">
+            <h1 className="text-2xl sm:text-3xl font-black text-stone-900">
               Executive Admin Control Panel
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-              Administrator: <strong className="text-white">{userEmail}</strong> • Active Currency:{' '}
-              <strong className="text-indigo-400">{activeCurrency}</strong>
+            <p className="text-xs sm:text-sm text-stone-500 mt-1">
+              Administrator: <strong className="text-stone-900">{userEmail}</strong> • Active Currency:{' '}
+              <strong className="text-teal-700">{activeCurrency}</strong>
             </p>
           </div>
 
@@ -422,7 +422,7 @@ export function AdminControlPanel({
             <button
               type="button"
               onClick={onRefreshData}
-              className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 border border-stone-300 text-stone-800 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Refresh Workspace
@@ -431,43 +431,43 @@ export function AdminControlPanel({
         </div>
 
         {/* System Health & Financial Audit KPIs */}
-        <div className="mt-6 pt-6 border-t border-zinc-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800">
-            <div className="flex items-center justify-between text-xs text-zinc-400">
+        <div className="mt-6 pt-6 border-t border-stone-200 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200">
+            <div className="flex items-center justify-between text-xs text-stone-500">
               <span>Budget Health Score</span>
-              <Activity className="w-4 h-4 text-indigo-400" />
+              <Activity className="w-4 h-4 text-teal-700" />
             </div>
-            <div className="text-2xl font-black text-indigo-400 mt-1">{healthScore} / 100</div>
-            <span className="text-[11px] text-zinc-500">Based on savings & burn rate</span>
+            <div className="text-2xl font-black text-teal-700 mt-1">{healthScore} / 100</div>
+            <span className="text-[11px] text-stone-500">Based on savings & burn rate</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800">
-            <div className="flex items-center justify-between text-xs text-zinc-400">
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200">
+            <div className="flex items-center justify-between text-xs text-stone-500">
               <span>Monthly Burn Ratio</span>
-              <Sliders className="w-4 h-4 text-amber-400" />
+              <Sliders className="w-4 h-4 text-amber-600" />
             </div>
-            <div className="text-2xl font-black text-amber-300 mt-1">{burnRatePct}%</div>
-            <span className="text-[11px] text-zinc-500">Target: under 80% of income</span>
+            <div className="text-2xl font-black text-amber-700 mt-1">{burnRatePct}%</div>
+            <span className="text-[11px] text-stone-500">Target: under 80% of income</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800">
-            <div className="flex items-center justify-between text-xs text-zinc-400">
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200">
+            <div className="flex items-center justify-between text-xs text-stone-500">
               <span>Savings Rate</span>
               <CheckCircle2 className="w-4 h-4 text-purple-400" />
             </div>
-            <div className="text-2xl font-black text-purple-300 mt-1">{savingsRatePct}%</div>
-            <span className="text-[11px] text-zinc-500">{fmt(savingsGoalUsd, 0)} / month</span>
+            <div className="text-2xl font-black text-stone-800 mt-1">{savingsRatePct}%</div>
+            <span className="text-[11px] text-stone-500">{fmt(savingsGoalUsd, 0)} / month</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800">
-            <div className="flex items-center justify-between text-xs text-zinc-400">
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200">
+            <div className="flex items-center justify-between text-xs text-stone-500">
               <span>Active Workspace Items</span>
               <Database className="w-4 h-4 text-sky-400" />
             </div>
-            <div className="text-2xl font-black text-white mt-1">
+            <div className="text-2xl font-black text-stone-900 mt-1">
               {transactions.length + clickpads.length + subscriptions.length}
             </div>
-            <span className="text-[11px] text-zinc-500">
+            <span className="text-[11px] text-stone-500">
               {transactions.length} Tx • {clickpads.length} Pads • {subscriptions.length} Subs
             </span>
           </div>
@@ -477,20 +477,20 @@ export function AdminControlPanel({
       {/* Grid of Admin Tools */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* SECTION 1: 1-Click Smart Budget Rule Generator & Starter Pack */}
-        <div className="rounded-3xl bg-zinc-900/70 border border-zinc-800 p-6 space-y-5">
+        <div className="rounded-3xl bg-white border border-stone-200 p-6 space-y-5">
           <div>
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              <Wand2 className="w-5 h-5 text-indigo-400" />
+            <h2 className="text-lg font-bold text-stone-900 flex items-center gap-2">
+              <Wand2 className="w-5 h-5 text-teal-700" />
               Smart Budget Rule Generator & Presets
             </h2>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-xs text-stone-500 mt-0.5">
               Automatically configure your Monthly Income, Fixed Bills, and Savings Goal using
               proven financial ratios.
             </p>
           </div>
 
           <div>
-            <label className="text-xs text-zinc-400 block mb-1.5">
+            <label className="text-xs text-stone-500 block mb-1.5">
               Base Monthly Income ({activeCurrency})
             </label>
             <input
@@ -498,7 +498,7 @@ export function AdminControlPanel({
               step="50"
               value={ruleIncomeInput}
               onChange={(e) => setRuleIncomeInput(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm font-bold text-white"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#F6F4EF] border border-stone-200 text-sm font-bold text-stone-900"
             />
           </div>
 
@@ -507,10 +507,10 @@ export function AdminControlPanel({
               type="button"
               disabled={busy}
               onClick={() => handleApplyBudgetRule('50-30-20')}
-              className="p-3.5 rounded-2xl bg-zinc-950 hover:bg-indigo-500/15 border border-zinc-800 hover:border-indigo-500/40 text-left transition-all cursor-pointer"
+              className="p-3.5 rounded-2xl bg-[#F6F4EF] hover:bg-teal-800/15 border border-stone-200 hover:border-teal-700/30 text-left transition-all cursor-pointer"
             >
-              <div className="font-bold text-xs text-indigo-300">Apply 50 / 30 / 20 Rule</div>
-              <p className="text-[11px] text-zinc-400 mt-1">
+              <div className="font-bold text-xs text-teal-800">Apply 50 / 30 / 20 Rule</div>
+              <p className="text-[11px] text-stone-500 mt-1">
                 50% Fixed Bills, 30% Flexible Spend, 20% Savings Target.
               </p>
             </button>
@@ -519,21 +519,21 @@ export function AdminControlPanel({
               type="button"
               disabled={busy}
               onClick={() => handleApplyBudgetRule('70-20-10')}
-              className="p-3.5 rounded-2xl bg-zinc-950 hover:bg-sky-500/15 border border-zinc-800 hover:border-sky-500/40 text-left transition-all cursor-pointer"
+              className="p-3.5 rounded-2xl bg-[#F6F4EF] hover:bg-sky-500/15 border border-stone-200 hover:border-sky-500/40 text-left transition-all cursor-pointer"
             >
-              <div className="font-bold text-xs text-sky-300">Apply 70 / 20 / 10 Rule</div>
-              <p className="text-[11px] text-zinc-400 mt-1">
+              <div className="font-bold text-xs text-sky-700">Apply 70 / 20 / 10 Rule</div>
+              <p className="text-[11px] text-stone-500 mt-1">
                 70% Living & Essentials, 20% Savings Target, 10% Flexible.
               </p>
             </button>
           </div>
 
-          <div className="pt-2 border-t border-zinc-800/80">
+          <div className="pt-2 border-t border-stone-200">
             <button
               type="button"
               disabled={busy}
               onClick={handleSeedStarterTemplates}
-              className="w-full py-2.5 px-4 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-teal-700/10 hover:bg-teal-800/25 border border-teal-700/25 text-teal-800 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer"
             >
               <Sparkles className="w-4 h-4" />
               Add Starter ClickPads & Subscriptions (0 Transactions)
@@ -542,13 +542,13 @@ export function AdminControlPanel({
         </div>
 
         {/* SECTION 2: Bulk Ledger & Subscription Operations */}
-        <div className="rounded-3xl bg-zinc-900/70 border border-zinc-800 p-6 space-y-5">
+        <div className="rounded-3xl bg-white border border-stone-200 p-6 space-y-5">
           <div>
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              <Layers className="w-5 h-5 text-amber-400" />
+            <h2 className="text-lg font-bold text-stone-900 flex items-center gap-2">
+              <Layers className="w-5 h-5 text-amber-600" />
               Bulk Maintenance & Subscription Tools
             </h2>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-xs text-stone-500 mt-0.5">
               Run 1-click subscription sweeps and selective transaction cleanup.
             </p>
           </div>
@@ -558,10 +558,10 @@ export function AdminControlPanel({
               type="button"
               disabled={busy}
               onClick={handleFlagExpensiveSubs}
-              className="w-full py-2.5 px-4 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-xs font-semibold text-white flex items-center justify-between cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#F6F4EF] hover:bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-900 flex items-center justify-between cursor-pointer"
             >
               <span>🚩 Flag Subscriptions Over $20/mo as Cancel Alert</span>
-              <span className="text-amber-300 font-bold">Run Sweep</span>
+              <span className="text-amber-700 font-bold">Run Sweep</span>
             </button>
 
             <div className="grid grid-cols-2 gap-2 pt-1">
@@ -569,7 +569,7 @@ export function AdminControlPanel({
                 type="button"
                 disabled={busy}
                 onClick={() => handleBulkSubStatus('paused')}
-                className="py-2.5 px-3 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
+                className="py-2.5 px-3 rounded-xl bg-[#F6F4EF] hover:bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-700 cursor-pointer"
               >
                 Pause All Subscriptions
               </button>
@@ -577,14 +577,14 @@ export function AdminControlPanel({
                 type="button"
                 disabled={busy}
                 onClick={() => handleBulkSubStatus('active')}
-                className="py-2.5 px-3 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-xs font-semibold text-indigo-300 cursor-pointer"
+                className="py-2.5 px-3 rounded-xl bg-[#F6F4EF] hover:bg-stone-100 border border-stone-200 text-xs font-semibold text-teal-800 cursor-pointer"
               >
                 Activate All Subscriptions
               </button>
             </div>
 
-            <div className="pt-3 border-t border-zinc-800/80">
-              <span className="text-[11px] uppercase tracking-wider text-zinc-400 block mb-2">
+            <div className="pt-3 border-t border-stone-200">
+              <span className="text-[11px] uppercase tracking-wider text-stone-500 block mb-2">
                 Selective Transaction Cleanup
               </span>
               <div className="grid grid-cols-2 gap-2.5">
@@ -592,7 +592,7 @@ export function AdminControlPanel({
                   type="button"
                   disabled={busy}
                   onClick={() => handleBulkDeleteTxByType('expense')}
-                  className="py-2.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-bold text-rose-300 cursor-pointer"
+                  className="py-2.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-bold text-rose-700 cursor-pointer"
                 >
                   Clear All Expenses
                 </button>
@@ -600,7 +600,7 @@ export function AdminControlPanel({
                   type="button"
                   disabled={busy}
                   onClick={() => handleBulkDeleteTxByType('income')}
-                  className="py-2.5 px-3 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-xs font-bold text-sky-300 cursor-pointer"
+                  className="py-2.5 px-3 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-xs font-bold text-sky-700 cursor-pointer"
                 >
                   Clear All Incomes
                 </button>
@@ -610,21 +610,21 @@ export function AdminControlPanel({
         </div>
 
         {/* SECTION 3: Custom Multi-Currency Exchange Rate Editor */}
-        <div className="rounded-3xl bg-zinc-900/70 border border-zinc-800 p-6 space-y-4">
+        <div className="rounded-3xl bg-white border border-stone-200 p-6 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <h2 className="text-lg font-bold text-stone-900 flex items-center gap-2">
                 <Globe className="w-5 h-5 text-sky-400" />
                 Multi-Currency Exchange Rates (vs 1 USD)
               </h2>
-              <p className="text-xs text-zinc-400 mt-0.5">
+              <p className="text-xs text-stone-500 mt-0.5">
                 Customize conversion rates used across KoinCLICK.
               </p>
             </div>
             <button
               type="button"
               onClick={handleResetDefaultRates}
-              className="px-3 py-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-[#F6F4EF] hover:bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-700 cursor-pointer"
             >
               Reset Defaults
             </button>
@@ -636,9 +636,9 @@ export function AdminControlPanel({
               .map((c) => (
                 <div
                   key={c.code}
-                  className="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800 flex flex-col gap-1"
+                  className="p-2.5 rounded-xl bg-[#F6F4EF] border border-stone-200 flex flex-col gap-1"
                 >
-                  <span className="text-xs font-bold text-zinc-300">
+                  <span className="text-xs font-bold text-stone-700">
                     {c.flag} {c.code} ({c.symbol})
                   </span>
                   <input
@@ -648,7 +648,7 @@ export function AdminControlPanel({
                     onChange={(e) =>
                       setRateEdits((prev) => ({ ...prev, [c.code]: e.target.value }))
                     }
-                    className="w-full px-2 py-1 rounded-lg bg-zinc-900 border border-zinc-700 text-xs font-bold text-white"
+                    className="w-full px-2 py-1 rounded-lg bg-white border border-stone-300 text-xs font-bold text-stone-900"
                   />
                 </div>
               ))}
@@ -657,21 +657,21 @@ export function AdminControlPanel({
           <button
             type="button"
             onClick={handleSaveCustomRates}
-            className="w-full py-2.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-extrabold cursor-pointer"
+            className="w-full py-2.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-stone-900 text-xs font-extrabold cursor-pointer"
           >
             Save Custom Exchange Rates
           </button>
         </div>
 
         {/* SECTION 4: Backup, Restore & Admin Security */}
-        <div className="rounded-3xl bg-zinc-900/70 border border-zinc-800 p-6 space-y-5 flex flex-col justify-between">
+        <div className="rounded-3xl bg-white border border-stone-200 p-6 space-y-5 flex flex-col justify-between">
           <div className="space-y-4">
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <h2 className="text-lg font-bold text-stone-900 flex items-center gap-2">
                 <Download className="w-5 h-5 text-purple-400" />
                 Backup, Restore & Security
               </h2>
-              <p className="text-xs text-zinc-400 mt-0.5">
+              <p className="text-xs text-stone-500 mt-0.5">
                 Export your entire KoinCLICK workspace to a portable JSON file or restore from a
                 previous snapshot.
               </p>
@@ -681,14 +681,14 @@ export function AdminControlPanel({
               <button
                 type="button"
                 onClick={handleExportJsonBackup}
-                className="py-3 px-4 rounded-2xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold text-white flex items-center justify-center gap-2 cursor-pointer"
+                className="py-3 px-4 rounded-2xl bg-[#F6F4EF] hover:bg-stone-100 border border-stone-200 text-xs font-bold text-stone-900 flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Download className="w-4 h-4 text-indigo-400" />
+                <Download className="w-4 h-4 text-teal-700" />
                 Export JSON Backup
               </button>
 
-              <label className="py-3 px-4 rounded-2xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold text-white flex items-center justify-center gap-2 cursor-pointer">
-                <Upload className="w-4 h-4 text-amber-400" />
+              <label className="py-3 px-4 rounded-2xl bg-[#F6F4EF] hover:bg-stone-100 border border-stone-200 text-xs font-bold text-stone-900 flex items-center justify-center gap-2 cursor-pointer">
+                <Upload className="w-4 h-4 text-amber-600" />
                 <span>Restore JSON Backup</span>
                 <input
                   type="file"
@@ -701,10 +701,10 @@ export function AdminControlPanel({
 
             <form
               onSubmit={handleUpdateAdminProfile}
-              className="pt-4 border-t border-zinc-800/80 space-y-3"
+              className="pt-4 border-t border-stone-200 space-y-3"
             >
-              <div className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-amber-400" />
+              <div className="text-xs font-bold text-stone-700 flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-amber-600" />
                 Admin Profile & Password Update
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -713,7 +713,7 @@ export function AdminControlPanel({
                   placeholder="Admin Display Name"
                   value={adminDisplayName}
                   onChange={(e) => setAdminDisplayName(e.target.value)}
-                  className="px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-white"
+                  className="px-3 py-2 rounded-xl bg-[#F6F4EF] border border-stone-200 text-xs text-stone-900"
                 />
                 <input
                   type="password"
@@ -721,13 +721,13 @@ export function AdminControlPanel({
                   placeholder="New Password (optional)"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-white"
+                  className="px-3 py-2 rounded-xl bg-[#F6F4EF] border border-stone-200 text-xs text-stone-900"
                 />
               </div>
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold cursor-pointer"
               >
                 Update Admin Profile & Password
               </button>
@@ -738,18 +738,18 @@ export function AdminControlPanel({
 
       {/* SECTION 5: Zero-Out & Factory Reset Danger Zone */}
       <div className="rounded-3xl bg-rose-950/20 border border-rose-500/30 p-6 space-y-4">
-        <div className="flex items-center gap-2 text-rose-300 font-bold text-base">
-          <AlertTriangle className="w-5 h-5 text-rose-400" />
+        <div className="flex items-center gap-2 text-rose-700 font-bold text-base">
+          <AlertTriangle className="w-5 h-5 text-rose-600" />
           Start From Zero — Reset Controls
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-2xl bg-zinc-950/90 border border-zinc-800 flex flex-col justify-between gap-3">
+          <div className="p-4 rounded-2xl bg-[#F6F4EF]/95 border border-stone-200 flex flex-col justify-between gap-3">
             <div>
-              <div className="font-bold text-sm text-white flex items-center gap-2">
-                <RotateCcw className="w-4 h-4 text-rose-400" />
+              <div className="font-bold text-sm text-stone-900 flex items-center gap-2">
+                <RotateCcw className="w-4 h-4 text-rose-600" />
                 Zero Out All Transactions
               </div>
-              <p className="text-xs text-zinc-400 mt-1">
+              <p className="text-xs text-stone-500 mt-1">
                 Deletes all {transactions.length} transactions and resets ClickPad counters to 0.
               </p>
             </div>
@@ -762,13 +762,13 @@ export function AdminControlPanel({
             </button>
           </div>
 
-          <div className="p-4 rounded-2xl bg-zinc-950/90 border border-zinc-800 flex flex-col justify-between gap-3">
+          <div className="p-4 rounded-2xl bg-[#F6F4EF]/95 border border-stone-200 flex flex-col justify-between gap-3">
             <div>
-              <div className="font-bold text-sm text-white flex items-center gap-2">
-                <Trash2 className="w-4 h-4 text-amber-400" />
+              <div className="font-bold text-sm text-stone-900 flex items-center gap-2">
+                <Trash2 className="w-4 h-4 text-amber-600" />
                 Complete Factory Reset (Everything to 0.00)
               </div>
-              <p className="text-xs text-zinc-400 mt-1">
+              <p className="text-xs text-stone-500 mt-1">
                 Wipes all transactions, ClickPads, and Subscriptions, and sets Monthly Income, Fixed
                 Bills, and Savings Goal to 0.00.
               </p>
@@ -776,7 +776,7 @@ export function AdminControlPanel({
             <button
               type="button"
               onClick={onFullFactoryResetToZero}
-              className="w-full py-2.5 px-4 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 text-xs font-bold cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-800 text-xs font-bold cursor-pointer"
             >
               Factory Reset Entire Account to Zero
             </button>

@@ -12,12 +12,12 @@ interface SpendingChartsProps {
 }
 
 const CHART_COLORS = [
-  '#6366f1',
-  '#22d3ee',
-  '#a855f7',
-  '#f59e0b',
-  '#10b981',
-  '#f43f5e',
+  '#0f766e',
+  '#d97706',
+  '#0369a1',
+  '#4338ca',
+  '#be123c',
+  '#57534e',
 ]
 
 export const SpendingCharts: React.FC<SpendingChartsProps> = ({
@@ -97,13 +97,13 @@ export const SpendingCharts: React.FC<SpendingChartsProps> = ({
   return (
     <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
       {/* 14-Day Daily Spending Velocity */}
-      <div className="lg:col-span-7 rounded-2xl sm:rounded-3xl bg-zinc-900/80 border border-zinc-800 p-4 sm:p-5 space-y-4">
+      <div className="lg:col-span-7 rounded-2xl sm:rounded-3xl bg-white border border-stone-200 p-4 sm:p-5 space-y-4">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-indigo-400" />
-            <h3 className="text-sm sm:text-base font-bold text-white">{title14Day}</h3>
+            <BarChart3 className="w-4 h-4 text-teal-700" />
+            <h3 className="text-sm sm:text-base font-bold text-stone-900">{title14Day}</h3>
           </div>
-          <span className="text-[11px] text-cyan-300 font-semibold">
+          <span className="text-[11px] text-teal-800 font-semibold">
             Safe line: {fmt(safeToSpendTodayUsd)}/d
           </span>
         </div>
@@ -128,15 +128,15 @@ export const SpendingCharts: React.FC<SpendingChartsProps> = ({
                   <div
                     className={`w-full max-w-[22px] rounded-t-md transition-all ${
                       d.amountUsd === 0
-                        ? 'bg-zinc-800/70'
+                        ? 'bg-stone-200/70'
                         : overSafe
                           ? 'bg-gradient-to-t from-rose-600 to-rose-400'
-                          : 'bg-gradient-to-t from-indigo-600 to-cyan-400'
+                          : 'bg-gradient-to-t from-teal-700 to-teal-500'
                     }`}
                     style={{ height: `${d.amountUsd === 0 ? 4 : hPct}%` }}
                   />
                 </div>
-                <span className="text-[9px] text-zinc-500 truncate max-w-full">
+                <span className="text-[9px] text-stone-500 truncate max-w-full">
                   {d.dateStr.slice(8)}
                 </span>
               </div>
@@ -146,19 +146,19 @@ export const SpendingCharts: React.FC<SpendingChartsProps> = ({
       </div>
 
       {/* Category Share Donut */}
-      <div className="lg:col-span-5 rounded-2xl sm:rounded-3xl bg-zinc-900/80 border border-zinc-800 p-4 sm:p-5 space-y-4">
+      <div className="lg:col-span-5 rounded-2xl sm:rounded-3xl bg-white border border-stone-200 p-4 sm:p-5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <PieChart className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-sm sm:text-base font-bold text-white">{titleCategoryMix}</h3>
+            <PieChart className="w-4 h-4 text-teal-700" />
+            <h3 className="text-sm sm:text-base font-bold text-stone-900">{titleCategoryMix}</h3>
           </div>
-          <span className="text-xs font-semibold text-zinc-400">
+          <span className="text-xs font-semibold text-stone-500">
             {fmt(categoryTotals.total)}
           </span>
         </div>
 
         {categoryTotals.total <= 0 ? (
-          <div className="h-36 flex items-center justify-center text-xs text-zinc-500">
+          <div className="h-36 flex items-center justify-center text-xs text-stone-500">
             Log an expense to see your category donut chart.
           </div>
         ) : (
@@ -169,7 +169,7 @@ export const SpendingCharts: React.FC<SpendingChartsProps> = ({
                 cy="50"
                 r="38"
                 fill="none"
-                stroke="#27272a"
+                stroke="#e7e5e4"
                 strokeWidth="12"
               />
               {donutSegments.map((seg) => (
@@ -195,9 +195,9 @@ export const SpendingCharts: React.FC<SpendingChartsProps> = ({
                       className="w-2.5 h-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: seg.color }}
                     />
-                    <span className="text-zinc-300 truncate">{seg.cat}</span>
+                    <span className="text-stone-700 truncate">{seg.cat}</span>
                   </div>
-                  <span className="text-zinc-400 font-semibold shrink-0">
+                  <span className="text-stone-500 font-semibold shrink-0">
                     {seg.pct}% ({Math.round(toDisplay(seg.amt))})
                   </span>
                 </div>

@@ -312,14 +312,14 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-0.5 text-xs font-semibold text-indigo-300 mb-1.5">
-            <Users className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-teal-700/10 border border-teal-700/25 px-2.5 py-0.5 text-xs font-semibold text-teal-800 mb-1.5">
+            <Users className="w-3.5 h-3.5 text-teal-700" />
             Tontine / Daret Circles
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white">
+          <h2 className="text-xl sm:text-2xl font-bold text-stone-900">
             Rotating Savings & Payout Tracker
           </h2>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-stone-500">
             Track member contributions, payout turns, and log your Tontine share or pot in 1 click.
           </p>
         </div>
@@ -327,7 +327,7 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
         <button
           type="button"
           onClick={openCreateModal}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold cursor-pointer self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs sm:text-sm font-bold cursor-pointer self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           New Tontine
@@ -336,19 +336,19 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl bg-zinc-900/80 border border-zinc-800 p-4">
-          <div className="text-xs text-zinc-400">Active Tontines</div>
-          <div className="text-2xl font-black text-white mt-1">{activeTontines.length}</div>
+        <div className="rounded-2xl bg-white border border-stone-200 p-4">
+          <div className="text-xs text-stone-500">Active Tontines</div>
+          <div className="text-2xl font-black text-stone-900 mt-1">{activeTontines.length}</div>
         </div>
-        <div className="rounded-2xl bg-zinc-900/80 border border-zinc-800 p-4">
-          <div className="text-xs text-zinc-400">Your Cycle Contribution</div>
-          <div className="text-2xl font-black text-indigo-400 mt-1">
+        <div className="rounded-2xl bg-white border border-stone-200 p-4">
+          <div className="text-xs text-stone-500">Your Cycle Contribution</div>
+          <div className="text-2xl font-black text-teal-700 mt-1">
             {fmt(totalCycleCommitmentUsd)}
           </div>
         </div>
-        <div className="rounded-2xl bg-zinc-900/80 border border-zinc-800 p-4">
-          <div className="text-xs text-zinc-400">Combined Pot Value</div>
-          <div className="text-2xl font-black text-cyan-400 mt-1">
+        <div className="rounded-2xl bg-white border border-stone-200 p-4">
+          <div className="text-xs text-stone-500">Combined Pot Value</div>
+          <div className="text-2xl font-black text-teal-700 mt-1">
             {fmt(totalExpectedPotsUsd)}
           </div>
         </div>
@@ -356,17 +356,17 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
 
       {/* Tontine Cards */}
       {tontines.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/40 p-10 text-center space-y-2.5">
-          <Users className="w-8 h-8 text-indigo-400 mx-auto" />
-          <p className="text-base font-bold text-zinc-200">No Tontines Created Yet</p>
-          <p className="text-xs text-zinc-500 max-w-md mx-auto">
+        <div className="rounded-2xl border border-dashed border-stone-300 bg-stone-50 p-10 text-center space-y-2.5">
+          <Users className="w-8 h-8 text-teal-700 mx-auto" />
+          <p className="text-base font-bold text-stone-800">No Tontines Created Yet</p>
+          <p className="text-xs text-stone-500 max-w-md mx-auto">
             Create a Tontine / Daret circle with friends, family, or coworkers to track rounds,
             who has paid, and when you collect the pot.
           </p>
           <button
             type="button"
             onClick={openCreateModal}
-            className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer"
+            className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             Create Your First Tontine
@@ -386,26 +386,26 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                 key={t.id}
                 className={`rounded-2xl border p-4 sm:p-5 space-y-4 ${
                   isMyTurn
-                    ? 'border-cyan-500/45 bg-gradient-to-br from-zinc-900 via-zinc-900 to-indigo-950/40'
-                    : 'border-zinc-800 bg-zinc-900/75'
+                    ? 'border-teal-700/35 bg-white shadow-sm'
+                    : 'border-stone-200 bg-white'
                 }`}
               >
                 {/* Card Header */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-xl">
+                    <div className="w-11 h-11 rounded-2xl bg-teal-700/10 border border-teal-700/25 flex items-center justify-center text-xl">
                       {t.emoji || '🤝'}
                     </div>
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="text-base font-bold text-white">{t.name}</h3>
+                        <h3 className="text-base font-bold text-stone-900">{t.name}</h3>
                         <span
                           className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
                             t.status === 'completed'
-                              ? 'bg-emerald-500/15 text-emerald-300'
+                              ? 'bg-emerald-500/15 text-emerald-700'
                               : isMyTurn
-                                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/35'
-                                : 'bg-indigo-500/15 text-indigo-300'
+                                ? 'bg-teal-700/10 text-teal-800 border border-teal-700/25'
+                                : 'bg-teal-700/10 text-teal-800'
                           }`}
                         >
                           {t.status === 'completed'
@@ -415,9 +415,9 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                               : `Turn #${t.my_turn_round}`}
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-400">
+                      <p className="text-xs text-stone-500">
                         {fmt(t.contribution_amount)} / {t.frequency} · {t.total_members} members ·
-                        Pot: <span className="text-cyan-400 font-semibold">{fmt(potUsd)}</span>
+                        Pot: <span className="text-teal-700 font-semibold">{fmt(potUsd)}</span>
                       </p>
                     </div>
                   </div>
@@ -426,14 +426,14 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                     <button
                       type="button"
                       onClick={() => openEditModal(t)}
-                      className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 cursor-pointer"
+                      className="p-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100 cursor-pointer"
                     >
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(t.id)}
-                      className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-zinc-800 cursor-pointer"
+                      className="p-1.5 rounded-lg text-stone-500 hover:text-rose-600 hover:bg-stone-100 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -443,17 +443,17 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                 {/* Round Progress */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-zinc-300 font-semibold">
+                    <span className="text-stone-700 font-semibold">
                       Round {t.current_round} of {t.total_members}
                     </span>
-                    <span className="text-zinc-400 flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-indigo-400" />
+                    <span className="text-stone-500 flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5 text-teal-700" />
                       Due: {String(t.next_due_date).slice(0, 10)}
                     </span>
                   </div>
-                  <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
+                  <div className="h-2 rounded-full bg-stone-100 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400 transition-all"
+                      className="h-full rounded-full bg-gradient-to-r from-teal-700 to-teal-500 transition-all"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -461,7 +461,7 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
 
                 {/* Members Payment Checklist */}
                 <div className="space-y-1.5">
-                  <div className="flex items-center justify-between text-[11px] text-zinc-400">
+                  <div className="flex items-center justify-between text-[11px] text-stone-500">
                     <span>
                       Round {t.current_round} Payments ({paidCount}/{t.total_members} paid)
                     </span>
@@ -477,20 +477,20 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                           onClick={() => handleToggleMemberPaid(t, m.round)}
                           className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-left text-xs border transition cursor-pointer ${
                             m.paidCurrentRound
-                              ? 'bg-indigo-500/15 border-indigo-500/35 text-indigo-200'
-                              : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                              ? 'bg-teal-700/10 border-teal-700/25 text-teal-900'
+                              : 'bg-stone-50 border-stone-200 text-stone-500 hover:text-stone-800'
                           }`}
                         >
                           {m.paidCurrentRound ? (
-                            <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-teal-700 shrink-0" />
                           ) : (
-                            <Circle className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+                            <Circle className="w-3.5 h-3.5 text-stone-400 shrink-0" />
                           )}
                           <span className="truncate font-medium">
                             #{m.round} {m.name}
                           </span>
                           {isTurnHolder && (
-                            <Sparkles className="w-3 h-3 text-amber-400 shrink-0 ml-auto" />
+                            <Sparkles className="w-3 h-3 text-amber-600 shrink-0 ml-auto" />
                           )}
                         </button>
                       )
@@ -504,9 +504,9 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                     <button
                       type="button"
                       onClick={() => handlePayMyShare(t)}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs font-bold text-white cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 border border-stone-300 text-xs font-bold text-stone-900 cursor-pointer"
                     >
-                      <Coins className="w-3.5 h-3.5 text-indigo-400" />
+                      <Coins className="w-3.5 h-3.5 text-teal-700" />
                       {myMember?.paidCurrentRound ? 'Log Share Again' : 'Pay My Share'}
                     </button>
 
@@ -514,7 +514,7 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                       <button
                         type="button"
                         onClick={() => handleCollectPot(t)}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-zinc-950 text-xs font-extrabold cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-extrabold cursor-pointer"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
                         Collect Pot ({fmt(potUsd)})
@@ -524,7 +524,7 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                     <button
                       type="button"
                       onClick={() => handleAdvanceRound(t)}
-                      className="ml-auto inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer"
+                      className="ml-auto inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold cursor-pointer"
                     >
                       {t.current_round >= t.total_members ? 'Finish Tontine' : 'Next Round'}
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -539,19 +539,19 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
 
       {/* Create / Edit Tontine Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-zinc-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-stone-900/40 backdrop-blur-sm flex items-center justify-center p-4">
           <form
             onSubmit={handleSave}
-            className="w-full max-w-lg rounded-2xl bg-zinc-900 border border-zinc-800 p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-lg rounded-2xl bg-white border border-stone-200 p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-base sm:text-lg font-bold text-white">
+              <h3 className="text-base sm:text-lg font-bold text-stone-900">
                 {editing ? 'Edit Tontine / Daret' : 'Create Tontine / Daret'}
               </h3>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="p-2 rounded-xl bg-zinc-800 text-zinc-300 cursor-pointer"
+                className="p-2 rounded-xl bg-stone-100 text-stone-700 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -565,8 +565,8 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                   onClick={() => setEmoji(em)}
                   className={`w-9 h-9 rounded-xl text-lg flex items-center justify-center border cursor-pointer ${
                     emoji === em
-                      ? 'bg-indigo-500/25 border-indigo-400'
-                      : 'bg-zinc-950 border-zinc-800'
+                      ? 'bg-teal-700/15 border-teal-700'
+                      : 'bg-[#F6F4EF] border-stone-200'
                   }`}
                 >
                   {em}
@@ -576,19 +576,19 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="sm:col-span-2">
-                <label className="block text-xs text-zinc-400 mb-1">Tontine Name</label>
+                <label className="block text-xs text-stone-500 mb-1">Tontine Name</label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Daret Famille, Office Tontine"
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2.5 text-sm text-white"
+                  className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2.5 text-sm text-stone-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">
+                <label className="block text-xs text-stone-500 mb-1">
                   Contribution ({activeCurrency})
                 </label>
                 <input
@@ -597,16 +597,16 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                   required
                   value={contributionInput}
                   onChange={(e) => setContributionInput(e.target.value)}
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2.5 text-sm text-white"
+                  className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2.5 text-sm text-stone-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Frequency</label>
+                <label className="block text-xs text-stone-500 mb-1">Frequency</label>
                 <select
                   value={frequency}
                   onChange={(e) => setFrequency(e.target.value as 'weekly' | 'biweekly' | 'monthly')}
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2.5 text-sm text-white"
+                  className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2.5 text-sm text-stone-900"
                 >
                   <option value="weekly">Weekly</option>
                   <option value="biweekly">Bi-Weekly</option>
@@ -615,7 +615,7 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Total Members</label>
+                <label className="block text-xs text-stone-500 mb-1">Total Members</label>
                 <input
                   type="number"
                   min={2}
@@ -623,12 +623,12 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                   required
                   value={totalMembers}
                   onChange={(e) => setTotalMembers(e.target.value)}
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2.5 text-sm text-white"
+                  className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2.5 text-sm text-stone-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Your Payout Turn (#)</label>
+                <label className="block text-xs text-stone-500 mb-1">Your Payout Turn (#)</label>
                 <input
                   type="number"
                   min={1}
@@ -636,22 +636,22 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                   required
                   value={myTurnRound}
                   onChange={(e) => setMyTurnRound(e.target.value)}
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2.5 text-sm text-white"
+                  className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2.5 text-sm text-stone-900"
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-xs text-zinc-400 mb-1">Start / First Due Date</label>
+                <label className="block text-xs text-stone-500 mb-1">Start / First Due Date</label>
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2.5 text-sm text-white"
+                  className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2.5 text-sm text-stone-900"
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-xs text-zinc-400 mb-1">
+                <label className="block text-xs text-stone-500 mb-1">
                   Member Names (comma-separated, optional)
                 </label>
                 <input
@@ -659,7 +659,7 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
                   value={memberNamesText}
                   onChange={(e) => setMemberNamesText(e.target.value)}
                   placeholder="Sara, You, Karim, Nadia, Omar, Lina"
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2.5 text-sm text-white"
+                  className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2.5 text-sm text-stone-900"
                 />
               </div>
             </div>
@@ -668,14 +668,14 @@ export const TontinePanel: React.FC<TontinePanelProps> = ({
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-stone-100 text-xs font-semibold text-stone-700 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white cursor-pointer"
+                className="px-5 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-xs font-bold text-white cursor-pointer"
               >
                 {saving ? 'Saving...' : editing ? 'Save Changes' : 'Create Tontine'}
               </button>

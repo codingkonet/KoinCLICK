@@ -127,15 +127,15 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white">Debts & Loans (Prêts / Dettes)</h2>
-          <p className="text-xs text-zinc-400">
+          <h2 className="text-xl sm:text-2xl font-bold text-stone-900">Debts & Loans (Prêts / Dettes)</h2>
+          <p className="text-xs text-stone-500">
             Track money lent to friends or borrowed, and settle with 1-click transaction logging.
           </p>
         </div>
         <button
           type="button"
           onClick={() => setShowModal(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold cursor-pointer self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs sm:text-sm font-bold cursor-pointer self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           Add Loan / Debt
@@ -143,25 +143,25 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl bg-zinc-900/80 border border-zinc-800 p-4">
-          <div className="text-xs text-zinc-400">Owed to Me (Lent)</div>
-          <div className="text-2xl font-black text-cyan-400 mt-1">{fmt(summary.owedToMe)}</div>
+        <div className="rounded-2xl bg-white border border-stone-200 p-4">
+          <div className="text-xs text-stone-500">Owed to Me (Lent)</div>
+          <div className="text-2xl font-black text-teal-700 mt-1">{fmt(summary.owedToMe)}</div>
         </div>
-        <div className="rounded-2xl bg-zinc-900/80 border border-zinc-800 p-4">
-          <div className="text-xs text-zinc-400">I Owe (Borrowed)</div>
-          <div className="text-2xl font-black text-rose-400 mt-1">{fmt(summary.iOwe)}</div>
+        <div className="rounded-2xl bg-white border border-stone-200 p-4">
+          <div className="text-xs text-stone-500">I Owe (Borrowed)</div>
+          <div className="text-2xl font-black text-rose-600 mt-1">{fmt(summary.iOwe)}</div>
         </div>
-        <div className="rounded-2xl bg-zinc-900/80 border border-zinc-800 p-4">
-          <div className="text-xs text-zinc-400">Net Loan Balance</div>
-          <div className="text-2xl font-black text-indigo-300 mt-1">{fmt(summary.net)}</div>
+        <div className="rounded-2xl bg-white border border-stone-200 p-4">
+          <div className="text-xs text-stone-500">Net Loan Balance</div>
+          <div className="text-2xl font-black text-teal-800 mt-1">{fmt(summary.net)}</div>
         </div>
       </div>
 
       {debts.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/40 p-10 text-center space-y-2">
-          <Wallet className="w-8 h-8 text-indigo-400 mx-auto" />
-          <p className="text-sm font-bold text-zinc-200">No Open Debts or Loans</p>
-          <p className="text-xs text-zinc-500">Record a loan or debt to track repayments cleanly.</p>
+        <div className="rounded-2xl border border-dashed border-stone-300 bg-stone-50 p-10 text-center space-y-2">
+          <Wallet className="w-8 h-8 text-teal-700 mx-auto" />
+          <p className="text-sm font-bold text-stone-800">No Open Debts or Loans</p>
+          <p className="text-xs text-stone-500">Record a loan or debt to track repayments cleanly.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -171,15 +171,15 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
             return (
               <div
                 key={d.id}
-                className="rounded-2xl border border-zinc-800 bg-zinc-900/75 p-4 space-y-3"
+                className="rounded-2xl border border-stone-200 bg-white p-4 space-y-3"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2.5">
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                         d.direction === 'lent'
-                          ? 'bg-cyan-500/15 text-cyan-400'
-                          : 'bg-rose-500/15 text-rose-400'
+                          ? 'bg-teal-700/10 text-teal-700'
+                          : 'bg-rose-500/15 text-rose-600'
                       }`}
                     >
                       {d.direction === 'lent' ? (
@@ -189,8 +189,8 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
                       )}
                     </div>
                     <div>
-                      <div className="font-bold text-white text-sm">{d.person_name}</div>
-                      <div className="text-xs text-zinc-400">
+                      <div className="font-bold text-stone-900 text-sm">{d.person_name}</div>
+                      <div className="text-xs text-stone-500">
                         {d.direction === 'lent' ? 'Owes you' : 'You owe'} ·{' '}
                         {d.due_date ? (
                           <span className="inline-flex items-center gap-1">
@@ -205,27 +205,27 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => handleDelete(d.id)}
-                    className="p-1.5 text-zinc-500 hover:text-rose-400 cursor-pointer"
+                    className="p-1.5 text-stone-500 hover:text-rose-600 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
 
-                {d.notes && <p className="text-xs text-zinc-400">{d.notes}</p>}
+                {d.notes && <p className="text-xs text-stone-500">{d.notes}</p>}
 
                 <div className="flex items-center justify-between pt-1">
-                  <div className="text-base font-black text-white">
+                  <div className="text-base font-black text-stone-900">
                     {isSettled ? 'Settled' : fmt(remaining)}
                   </div>
                   {isSettled ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700">
                       <CheckCircle2 className="w-4 h-4" /> Settled
                     </span>
                   ) : (
                     <button
                       type="button"
                       onClick={() => handleSettle(d)}
-                      className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold cursor-pointer"
                     >
                       Settle & Log
                     </button>
@@ -238,17 +238,17 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
       )}
 
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-zinc-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-stone-900/40 backdrop-blur-sm flex items-center justify-center p-4">
           <form
             onSubmit={handleAddDebt}
-            className="w-full max-w-md rounded-2xl bg-zinc-900 border border-zinc-800 p-5 shadow-2xl space-y-4"
+            className="w-full max-w-md rounded-2xl bg-white border border-stone-200 p-5 shadow-2xl space-y-4"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-white">Add Loan / Debt</h3>
+              <h3 className="text-base font-bold text-stone-900">Add Loan / Debt</h3>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 cursor-pointer"
+                className="p-1.5 rounded-lg bg-stone-100 text-stone-700 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -260,8 +260,8 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
                 onClick={() => setDirection('lent')}
                 className={`py-2 rounded-xl text-xs font-bold border cursor-pointer ${
                   direction === 'lent'
-                    ? 'bg-cyan-500/20 border-cyan-500/40 text-cyan-300'
-                    : 'bg-zinc-950 border-zinc-800 text-zinc-400'
+                    ? 'bg-teal-700/10 border-teal-700/30 text-teal-800'
+                    : 'bg-[#F6F4EF] border-stone-200 text-stone-500'
                 }`}
               >
                 I Lent (Owed to me)
@@ -271,8 +271,8 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
                 onClick={() => setDirection('borrowed')}
                 className={`py-2 rounded-xl text-xs font-bold border cursor-pointer ${
                   direction === 'borrowed'
-                    ? 'bg-rose-500/20 border-rose-500/40 text-rose-300'
-                    : 'bg-zinc-950 border-zinc-800 text-zinc-400'
+                    ? 'bg-rose-500/20 border-rose-500/40 text-rose-700'
+                    : 'bg-[#F6F4EF] border-stone-200 text-stone-500'
                 }`}
               >
                 I Borrowed (I owe)
@@ -280,20 +280,20 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs text-zinc-400 mb-1">Person Name</label>
+              <label className="block text-xs text-stone-500 mb-1">Person Name</label>
               <input
                 type="text"
                 required
                 value={personName}
                 onChange={(e) => setPersonName(e.target.value)}
                 placeholder="e.g. Karim, Sara"
-                className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-sm text-white"
+                className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2 text-sm text-stone-900"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">
+                <label className="block text-xs text-stone-500 mb-1">
                   Amount ({activeCurrency})
                 </label>
                 <input
@@ -302,28 +302,28 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
                   required
                   value={amountInput}
                   onChange={(e) => setAmountInput(e.target.value)}
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-sm text-white"
+                  className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2 text-sm text-stone-900"
                 />
               </div>
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Due Date (Optional)</label>
+                <label className="block text-xs text-stone-500 mb-1">Due Date (Optional)</label>
                 <input
                   type="date"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
-                  className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-sm text-white"
+                  className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2 text-sm text-stone-900"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-zinc-400 mb-1">Notes</label>
+              <label className="block text-xs text-stone-500 mb-1">Notes</label>
               <input
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Optional note..."
-                className="w-full rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-2 text-sm text-white"
+                className="w-full rounded-xl bg-[#F6F4EF] border border-stone-200 px-3 py-2 text-sm text-stone-900"
               />
             </div>
 
@@ -331,14 +331,14 @@ export const DebtsPanel: React.FC<DebtsPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-stone-100 text-xs font-semibold text-stone-700 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-xs font-bold text-white cursor-pointer"
               >
                 {saving ? 'Saving...' : 'Save Record'}
               </button>
