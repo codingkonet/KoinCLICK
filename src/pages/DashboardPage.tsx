@@ -19,6 +19,7 @@ import {
 import { compressImageToDataUrl } from '../lib/imageUtils'
 import { scanReceiptWithAi } from '../lib/aiBudgetService'
 import { openPrintableMonthlyReport, parseBankCsv, type ParsedCsvTx } from '../lib/csvPdfUtils'
+import { applyLangToDocument, getSavedLang, TRANSLATIONS, type AppLang } from '../lib/i18n'
 import { useAuth } from '../context/AuthContext'
 import { ensureStarterData } from '../lib/seedUserData'
 import { AdminControlPanel } from '../components/AdminControlPanel'
@@ -61,6 +62,7 @@ import {
   Printer,
   Wand2,
   Users,
+  Languages,
 } from 'lucide-react'
 
 const CATEGORIES = [
@@ -93,6 +95,18 @@ export function DashboardPage() {
   const [activeTab, setActiveTab] = useState<
     'overview' | 'transactions' | 'radar' | 'tontine' | 'ai' | 'admin'
   >('overview')
+
+  // Language (English / Arabic RTL)
+  const [lang, setLang] = useState<AppLang>(getSavedLang)
+  const t = TRANSLATIONS[lang]
+
+  useEffect(() => {
+    applyLangToDocument(lang)
+  }, [lang])
+
+  const toggleLanguage = () => {
+    setLang((prev) => (prev === 'en' ? 'ar' : 'en'))
+  }
 
   // Active Display Currency (stored in settings.currency, defaults to USD)
   const activeCurrency = settings?.currency || 'USD'
@@ -1133,7 +1147,7 @@ export function DashboardPage() {
         <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center animate-spin">
           <RefreshCw className="w-6 h-6 text-indigo-400" />
         </div>
-        <p className="text-sm text-zinc-400">Loading your KoinCLICK workspace...</p>
+        <p className="text-sm text-zinc-400">{t.loadingWorkspace}</p>
       </div>
     )
   }
@@ -1151,44 +1165,44 @@ export function DashboardPage() {
 
         {/* Top Navigation Bar */}
         <header className="sticky top-0 z-30 backdrop-blur-xl bg-zinc-950/90 border-b border-zinc-800/80">
-          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center shadow-md shadow-indigo-500/20 shrink-0">
+          <div className="max-w-7xl mx-auto px-2.5 sm:px-4 lg:px-6 py-2 sm:py-2.5 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0 shrink-0">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center shadow-md shadow-indigo-500/20 shrink-0">
                 <Coins className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                <span className="text-lg sm:text-xl font-extrabold tracking-tight text-white truncate">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="text-base sm:text-lg font-extrabold tracking-tight text-white truncate">
                   Koin<span className="text-indigo-400">CLICK</span>
                 </span>
-                <span className="hidden md:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-300 truncate max-w-[140px]">
+                <span className="hidden 2xl:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-300 truncate max-w-[120px]">
                   {settings?.display_name || user?.email}
                 </span>
                 {isAdmin && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-1.5 sm:px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 shrink-0">
-                    <Shield className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                    <span className="hidden sm:inline">Admin</span>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 shrink-0">
+                    <Shield className="w-2.5 h-2.5" />
+                    <span className="hidden xl:inline">{t.admin}</span>
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Desktop Top Navigation Menu (Without Jars) */}
-            <nav className="hidden lg:flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+            {/* Desktop Top Navigation Menu */}
+            <nav className="hidden lg:flex items-center gap-0.5 bg-zinc-900 p-1 rounded-xl border border-zinc-800 overflow-x-auto no-scrollbar min-w-0">
               {(
                 [
-                  { id: 'overview', label: 'Pulse & Overview' },
-                  { id: 'transactions', label: `Transactions (${transactions.length})` },
-                  { id: 'radar', label: `Subscriptions (${subscriptions.length})` },
-                  { id: 'tontine', label: `Tontine (${tontines.length})` },
-                  { id: 'ai', label: 'AI Budget' },
-                  ...(isAdmin ? ([{ id: 'admin', label: 'Admin Control' }] as const) : []),
+                  { id: 'overview', label: t.overviewFull },
+                  { id: 'transactions', label: `${t.transactions} (${transactions.length})` },
+                  { id: 'radar', label: `${t.subsFull} (${subscriptions.length})` },
+                  { id: 'tontine', label: `${t.tontine} (${tontines.length})` },
+                  { id: 'ai', label: t.aiBudget },
+                  ...(isAdmin ? ([{ id: 'admin', label: t.adminFull }] as const) : []),
                 ] as const
               ).map((tab) => (
                 <button
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  className={`px-2.5 xl:px-3 py-1.5 rounded-lg text-[11px] xl:text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
                     activeTab === tab.id
                       ? 'bg-indigo-500 text-white shadow-sm'
                       : 'text-zinc-400 hover:text-white'
@@ -1199,30 +1213,41 @@ export function DashboardPage() {
               ))}
             </nav>
 
-            {/* Right Controls: Start From Zero + Multi-Currency Selector + Settings + Sign Out */}
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Right Controls */}
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+              {/* Language Switcher (EN / العربية) */}
+              <button
+                type="button"
+                onClick={toggleLanguage}
+                title={lang === 'en' ? 'Switch to Arabic (العربية)' : 'Switch to English'}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] font-bold text-indigo-300 cursor-pointer transition-colors"
+              >
+                <Languages className="w-3.5 h-3.5 shrink-0" />
+                <span>{lang === 'en' ? 'عربي' : 'EN'}</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => setShowResetModal(true)}
                 title="Reset & Start From Zero"
-                className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold cursor-pointer transition-colors"
+                className="flex items-center gap-1 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-[11px] font-bold cursor-pointer transition-colors"
               >
-                <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Start From Zero</span>
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span className="hidden xl:inline">{t.resetZero}</span>
               </button>
 
               {/* Multi-Currency Selector + Live FX Sync */}
-              <div className="relative flex items-center bg-zinc-900 border border-zinc-800 hover:border-indigo-500/40 rounded-xl px-2 sm:px-2.5 py-1.5">
-                <Globe className="w-3.5 h-3.5 text-indigo-400 mr-1 sm:mr-1.5 shrink-0" />
+              <div className="relative flex items-center bg-zinc-900 border border-zinc-800 hover:border-indigo-500/40 rounded-xl px-1.5 sm:px-2 py-1.5">
+                <Globe className="hidden sm:block w-3.5 h-3.5 text-indigo-400 mr-1 shrink-0" />
                 <select
                   aria-label="Select Currency"
                   value={activeCurrency}
                   onChange={(e) => handleCurrencyChange(e.target.value)}
-                  className="bg-transparent text-[11px] sm:text-xs font-bold text-white focus:outline-none cursor-pointer pr-0.5 sm:pr-1"
+                  className="bg-transparent text-[11px] font-bold text-white focus:outline-none cursor-pointer"
                 >
                   {SUPPORTED_CURRENCIES.map((c) => (
                     <option key={c.code} value={c.code} className="bg-zinc-900 text-white">
-                      {c.flag} {c.code} ({c.symbol})
+                      {c.flag} {c.code}
                     </option>
                   ))}
                 </select>
@@ -1241,13 +1266,13 @@ export function DashboardPage() {
                 type="button"
                 onClick={togglePrivacyBlur}
                 title={privacyBlur ? 'Show Amounts' : 'Hide Amounts (Privacy Mode)'}
-                className={`p-2 rounded-xl border cursor-pointer transition-colors ${
+                className={`p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-colors ${
                   privacyBlur
                     ? 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300'
                     : 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-300'
                 }`}
               >
-                {privacyBlur ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {privacyBlur ? <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
               </button>
 
               {/* 4-Digit PIN App Lock */}
@@ -1265,13 +1290,13 @@ export function DashboardPage() {
                   setShowPinModal(true)
                 }}
                 title={savedPin ? 'Lock App (Right-click to change PIN)' : 'Set 4-Digit App PIN'}
-                className={`p-2 rounded-xl border cursor-pointer transition-colors ${
+                className={`p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-colors ${
                   savedPin
                     ? 'bg-zinc-900 hover:bg-zinc-800 border-indigo-500/35 text-indigo-300'
                     : 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400'
                 }`}
               >
-                {savedPin ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                {savedPin ? <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Unlock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
               </button>
 
               <button
@@ -1284,19 +1309,19 @@ export function DashboardPage() {
                   setShowSettingsModal(true)
                 }}
                 title="Budget & Currency Settings"
-                className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 cursor-pointer"
+                className="p-1.5 sm:p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 cursor-pointer"
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
 
               <button
                 type="button"
                 onClick={signOut}
-                title="Sign Out"
-                className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl bg-zinc-900 hover:bg-rose-500/15 hover:border-rose-500/40 hover:text-rose-300 border border-zinc-800 text-xs font-semibold text-zinc-300 transition-colors cursor-pointer"
+                title={t.signOut}
+                className="flex items-center gap-1 p-1.5 sm:p-2 rounded-xl bg-zinc-900 hover:bg-rose-500/15 hover:border-rose-500/40 hover:text-rose-300 border border-zinc-800 text-xs font-semibold text-zinc-300 transition-colors cursor-pointer"
               >
-                <LogOut className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
-                <span className="hidden sm:inline">Sign Out</span>
+                <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="hidden xl:inline">{t.signOut}</span>
               </button>
             </div>
           </div>
@@ -1337,11 +1362,11 @@ export function DashboardPage() {
                     <div>
                       <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-[11px] sm:text-xs font-semibold mb-2.5 sm:mb-3">
                         <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-                        Safe-to-Spend Today • {daysRemaining} days left
+                        {t.safeToSpendToday} • {daysRemaining} {t.daysLeft}
                       </div>
                       <div className="text-3xl sm:text-5xl font-black tracking-tight text-white">
                         {fmt(safeToSpendToday)}
-                        <span className="text-sm sm:text-base font-medium text-zinc-400 ml-1.5 sm:ml-2">/ day</span>
+                        <span className="text-sm sm:text-base font-medium text-zinc-400 ml-1.5 sm:ml-2">{t.perDay}</span>
                       </div>
                       <p className="text-xs sm:text-sm text-zinc-400 mt-2 max-w-lg">
                         Calculated after setting aside{' '}
@@ -2223,7 +2248,7 @@ export function DashboardPage() {
           <div className="flex items-center gap-2">
             <Coins className="w-4 h-4 text-indigo-400 shrink-0" />
             <span className="font-bold text-zinc-300">KoinCLICK</span>
-            <span>— Simple Multi-Currency Budget Manager</span>
+            <span>— {t.footerTagline}</span>
           </div>
           <div>© {new Date().getFullYear()} KoinCLICK. All rights reserved.</div>
         </div>
@@ -2232,26 +2257,26 @@ export function DashboardPage() {
       {/* MOBILE BOTTOM NAVIGATION BAR */}
       <nav
         aria-label="Mobile Navigation"
-        className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/90 px-2 py-1.5 flex items-center justify-around"
+        className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/90 px-1 py-1.5 flex items-center justify-between gap-0.5"
       >
         {(
           [
-            { id: 'overview', label: 'Overview', icon: BarChart3, count: null },
-            { id: 'transactions', label: 'Transactions', icon: Receipt, count: transactions.length },
-            { id: 'radar', label: 'Subs', icon: Calendar, count: subscriptions.length },
+            { id: 'overview', label: t.overview, icon: BarChart3, count: null },
+            { id: 'transactions', label: t.transactions, icon: Receipt, count: transactions.length },
+            { id: 'radar', label: t.subs, icon: Calendar, count: subscriptions.length },
             {
               id: 'tontine',
-              label: 'Tontine',
+              label: t.tontine,
               icon: Users,
-              count: tontines.filter((t) => t.status === 'active').length || null,
+              count: tontines.filter((x) => x.status === 'active').length || null,
             },
             {
               id: 'ai',
-              label: 'AI Budget',
+              label: t.aiBudget,
               icon: Sparkles,
               count: aiModels.filter((m) => m.is_active).length || null,
             },
-            ...(isAdmin ? ([{ id: 'admin', label: 'Admin', icon: Shield, count: null }] as const) : []),
+            ...(isAdmin ? ([{ id: 'admin', label: t.admin, icon: Shield, count: null }] as const) : []),
           ] as const
         ).map((item) => {
           const Icon = item.icon
@@ -2261,21 +2286,23 @@ export function DashboardPage() {
               key={item.id}
               type="button"
               onClick={() => setActiveTab(item.id)}
-              className={`relative flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl min-w-[64px] transition-all cursor-pointer ${
+              className={`relative flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-xl transition-all cursor-pointer ${
                 active
                   ? 'text-indigo-400 bg-indigo-500/10'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
               <div className="relative">
-                <Icon className="w-5 h-5" />
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 {item.count !== null && item.count > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-indigo-500 text-white text-[9px] font-extrabold flex items-center justify-center">
+                  <span className="absolute -top-1.5 -right-2 min-w-[14px] h-3.5 px-1 rounded-full bg-indigo-500 text-white text-[8.5px] font-extrabold flex items-center justify-center">
                     {item.count > 99 ? '99+' : item.count}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
+              <span className="text-[9.5px] sm:text-[10px] font-bold tracking-tight truncate max-w-full">
+                {item.label}
+              </span>
             </button>
           )
         })}
