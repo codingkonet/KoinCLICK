@@ -126,3 +126,16 @@ export interface KoinTontine {
   notes?: string | null
   created_at?: string
 }
+
+export interface KoinDebt {
+  id: number
+  user_id: string
+  person_name: string
+  direction: 'lent' | 'borrowed'
+  total_amount: number
+  paid_amount: number
+  due_date?: string | null
+  status: 'open' | 'settled'
+  notes?: string | null
+  created_at?: string
+}

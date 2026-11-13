@@ -594,3 +594,54 @@ export function guessCategoryFromTitle(title: string): string {
   if (/salary|payroll|deposit|refund|dividend/.test(t)) return 'Salary / Income'
   return 'General'
 }
+
+export interface ParsedVoiceExpense {
+  title: string
+  amount: number
+  txType: 'expense' | 'income'
+  category: string
+}
+
+export async function parseVoiceExpense(
+  transcript: string,
+  allowedCategories: string[],
+  model: KoinAiModel | null
+): Promise<ParsedVoiceExpense> {
+  if (model) {
+    try {
+      const raw = await callUserAiModel(
+        model,
+        `Extract a single financial transaction from spoken text. Return ONLY JSON: {"title": string, "amount": number, "txType": "expense"|"income", "category": one of [${allowedCategories.join(', ')}]}.`,
+        transcript
+      )
+      const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim()
+      const match = cleaned.match(/\{[\s\S]*\}/)
+      const parsed = JSON.parse(match ? match[0] : cleaned)
+      return {
+        title: String(parsed.title || transcript).slice(0, 50),
+        amount: Math.max(0, Number(parsed.amount || 0)),
+        txType: parsed.txType === 'income' ? 'income' : 'expense',
+        category: allowedCategories.includes(String(parsed.category))
+          ? String(parsed.category)
+          : guessCategoryFromTitle(transcript),
+      }
+    } catch {
+      // fallback to local regex parser
+    }
+  }
+
+  const numMatch = transcript.match(/(\d+(?:[.,]\d+)?)/)
+  const amount = numMatch ? Number(numMatch[1].replace(',', '.')) : 0
+  const isIncome = /salary|income|received|bonus|دخل|راتب|salaire|revenu/i.test(transcript)
+  const cleanedTitle = transcript
+    .replace(/(\d+(?:[.,]\d+)?)/g, '')
+    .replace(/\b(usd|eur|mad|dh|dirhams?|dollars?|euros?)\b/gi, '')
+    .trim()
+
+  return {
+    title: (cleanedTitle || transcript).slice(0, 50),
+    amount: Number.isFinite(amount) ? amount : 0,
+    txType: isIncome ? 'income' : 'expense',
+    category: guessCategoryFromTitle(transcript),
+  }
+}

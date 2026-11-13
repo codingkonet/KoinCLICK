@@ -8,6 +8,7 @@ import {
   type KoinAiModel,
   type KoinAiBudget,
   type KoinTontine,
+  type KoinDebt,
 } from '../lib/supabase'
 import {
   SUPPORTED_CURRENCIES,
@@ -17,7 +18,7 @@ import {
   syncLiveExchangeRates,
 } from '../lib/currencies'
 import { compressImageToDataUrl } from '../lib/imageUtils'
-import { scanReceiptWithAi } from '../lib/aiBudgetService'
+import { scanReceiptWithAi, parseVoiceExpense } from '../lib/aiBudgetService'
 import { openPrintableMonthlyReport, parseBankCsv, type ParsedCsvTx } from '../lib/csvPdfUtils'
 import { applyLangToDocument, getSavedLang, TRANSLATIONS, type AppLang } from '../lib/i18n'
 import { useAuth } from '../context/AuthContext'
@@ -25,6 +26,8 @@ import { ensureStarterData } from '../lib/seedUserData'
 import { AdminControlPanel } from '../components/AdminControlPanel'
 import { AiBudgetPanel } from '../components/AiBudgetPanel'
 import { TontinePanel } from '../components/TontinePanel'
+import { DebtsPanel } from '../components/DebtsPanel'
+import { SpendingCharts } from '../components/SpendingCharts'
 import {
   Coins,
   Zap,
@@ -63,6 +66,8 @@ import {
   Wand2,
   Users,
   Languages,
+  Bell,
+  Mic,
 } from 'lucide-react'
 
 const CATEGORIES = [
@@ -91,6 +96,9 @@ export function DashboardPage() {
   const [aiModels, setAiModels] = useState<KoinAiModel[]>([])
   const [aiBudgets, setAiBudgets] = useState<KoinAiBudget[]>([])
   const [tontines, setTontines] = useState<KoinTontine[]>([])
+  const [debts, setDebts] = useState<KoinDebt[]>([])
+  const [tontineSubTab, setTontineSubTab] = useState<'tontine' | 'debts'>('tontine')
+  const [listeningVoice, setListeningVoice] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<
     'overview' | 'transactions' | 'radar' | 'tontine' | 'ai' | 'admin'
@@ -105,7 +113,7 @@ export function DashboardPage() {
   }, [lang])
 
   const toggleLanguage = () => {
-    setLang((prev) => (prev === 'en' ? 'ar' : 'en'))
+    setLang((prev) => (prev === 'en' ? 'fr' : prev === 'fr' ? 'ar' : 'en'))
   }
 
   // PWA Browser Install Prompt
@@ -307,7 +315,7 @@ export function DashboardPage() {
       user.user_metadata?.full_name || user.email?.split('@')[0] || 'Koin Master'
     )
 
-    const [settingsRes, padsRes, txRes, subsRes, aiModelsRes, aiBudgetsRes, tontinesRes] =
+    const [settingsRes, padsRes, txRes, subsRes, aiModelsRes, aiBudgetsRes, tontinesRes, debtsRes] =
       await Promise.all([
         supabase.from('koinclick_settings').select('*').eq('user_id', user.id).single(),
         supabase.from('koinclick_clickpads').select('*').eq('user_id', user.id).order('id'),
@@ -337,6 +345,11 @@ export function DashboardPage() {
           .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false }),
+        supabase
+          .from('koinclick_debts')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false }),
       ])
 
     if (settingsRes.data) {
@@ -354,6 +367,7 @@ export function DashboardPage() {
     if (aiModelsRes.data) setAiModels(aiModelsRes.data)
     if (aiBudgetsRes.data) setAiBudgets(aiBudgetsRes.data)
     if (tontinesRes.data) setTontines(tontinesRes.data)
+    if (debtsRes.data) setDebts(debtsRes.data)
 
     setLoading(false)
   }, [user])
@@ -1105,6 +1119,95 @@ export function DashboardPage() {
     }
   }
 
+  // Voice Expense Logging (Speak to Log)
+  const handleVoiceExpense = async () => {
+    const SpeechRec =
+      (window as unknown as { SpeechRecognition?: new () => unknown; webkitSpeechRecognition?: new () => unknown })
+        .SpeechRecognition ||
+      (window as unknown as { webkitSpeechRecognition?: new () => unknown }).webkitSpeechRecognition
+
+    const applyTranscript = async (transcript: string) => {
+      if (!transcript.trim()) return
+      const parsed = await parseVoiceExpense(
+        transcript,
+        CATEGORIES.map((c) => c.label),
+        activeAiModel
+      )
+      openAddTransactionModal(parsed.txType)
+      setTxTitle(parsed.title)
+      if (parsed.amount > 0) setTxAmount(String(parsed.amount))
+      setTxCategory(parsed.category)
+      const matched = CATEGORIES.find((c) => c.label === parsed.category)
+      if (matched) setTxEmoji(matched.emoji)
+      showToast(`🎙️ "${transcript}" → ready to save`)
+    }
+
+    if (!SpeechRec) {
+      const typed = window.prompt('Speak/Type your expense (e.g. "Coffee 25"):')
+      if (typed) await applyTranscript(typed)
+      return
+    }
+
+    setListeningVoice(true)
+    try {
+      const rec = new SpeechRec() as {
+        lang: string
+        interimResults: boolean
+        maxAlternatives: number
+        onresult: (ev: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void
+        onerror: () => void
+        onend: () => void
+        start: () => void
+      }
+      rec.lang = lang === 'ar' ? 'ar-MA' : lang === 'fr' ? 'fr-FR' : 'en-US'
+      rec.interimResults = false
+      rec.maxAlternatives = 1
+      rec.onresult = (ev) => {
+        const text = ev.results?.[0]?.[0]?.transcript || ''
+        setListeningVoice(false)
+        void applyTranscript(text)
+      }
+      rec.onerror = () => setListeningVoice(false)
+      rec.onend = () => setListeningVoice(false)
+      rec.start()
+    } catch {
+      setListeningVoice(false)
+    }
+  }
+
+  // Due-Date Reminders (PWA Browser Notifications)
+  const handleCheckReminders = async () => {
+    const upcomingSubs = subscriptions.filter((s) => {
+      if (s.status === 'paused') return false
+      const diff = s.billing_day - new Date().getDate()
+      return diff >= 0 && diff <= 3
+    })
+    const upcomingTontines = tontines.filter((tn) => {
+      if (tn.status !== 'active') return false
+      const diffDays = Math.ceil(
+        (new Date(`${String(tn.next_due_date).slice(0, 10)}T12:00:00`).getTime() - Date.now()) /
+          86400000
+      )
+      return diffDays >= -1 && diffDays <= 3
+    })
+
+    const summary =
+      upcomingSubs.length + upcomingTontines.length > 0
+        ? `Upcoming: ${upcomingSubs.length} subscription(s), ${upcomingTontines.length} Tontine round(s) due within 3 days.`
+        : 'All clear! No Tontine or Subscription dues in the next 3 days.'
+
+    if ('Notification' in window) {
+      const perm = await Notification.requestPermission()
+      if (perm === 'granted') {
+        new Notification('KoinCLICK Reminders', {
+          body: summary,
+          icon: './pwa-192.png',
+        })
+      }
+    }
+    showToast(`🔔 ${summary}`)
+  }
+
   // Filtered Transactions
   const filteredTransactions = useMemo(() => {
     return transactions.filter((tx) => {
@@ -1262,15 +1365,25 @@ export function DashboardPage() {
                 </button>
               )}
 
-              {/* Language Switcher (EN / العربية) */}
+              {/* Language Switcher (EN / FR / العربية) */}
               <button
                 type="button"
                 onClick={toggleLanguage}
-                title={lang === 'en' ? 'Switch to Arabic (العربية)' : 'Switch to English'}
+                title="Switch Language (EN / FR / العربية)"
                 className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] font-bold text-indigo-300 cursor-pointer transition-colors"
               >
                 <Languages className="w-3.5 h-3.5 shrink-0" />
-                <span>{lang === 'en' ? 'عربي' : 'EN'}</span>
+                <span>{lang === 'en' ? 'EN' : lang === 'fr' ? 'FR' : 'عربي'}</span>
+              </button>
+
+              {/* Due-Date Reminders Bell */}
+              <button
+                type="button"
+                onClick={handleCheckReminders}
+                title="Check Tontine & Subscription Reminders"
+                className="p-1.5 sm:p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-cyan-400 cursor-pointer transition-colors"
+              >
+                <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
 
               <button
@@ -1447,19 +1560,31 @@ export function DashboardPage() {
                           <span>Photo / Reçu</span>
                         </button>
                       </div>
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-3 gap-2">
                         <button
                           onClick={() => openAddTransactionModal('income')}
-                          className="px-3 py-2.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 font-semibold text-xs flex items-center justify-center gap-1.5 border border-sky-500/30 cursor-pointer"
+                          className="px-2.5 py-2.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 font-semibold text-xs flex items-center justify-center gap-1 border border-sky-500/30 cursor-pointer"
                         >
-                          <TrendingUp className="w-3.5 h-3.5" />+ Income
+                          <TrendingUp className="w-3.5 h-3.5" />+ {t.income}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleVoiceExpense}
+                          className={`px-2.5 py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-1 border cursor-pointer ${
+                            listeningVoice
+                              ? 'bg-cyan-500 text-zinc-950 border-cyan-400 animate-pulse'
+                              : 'bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 border-indigo-500/30'
+                          }`}
+                        >
+                          <Mic className="w-3.5 h-3.5" />
+                          {listeningVoice ? '...' : t.voiceLog}
                         </button>
                         <button
                           onClick={() => setShowResetModal(true)}
-                          className="px-3 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 font-semibold text-xs flex items-center justify-center gap-1.5 border border-rose-500/30 cursor-pointer"
+                          className="px-2.5 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 font-semibold text-xs flex items-center justify-center gap-1 border border-rose-500/30 cursor-pointer"
                         >
                           <RotateCcw className="w-3.5 h-3.5" />
-                          Zero All
+                          {t.resetZero}
                         </button>
                       </div>
                     </div>
@@ -1574,6 +1699,16 @@ export function DashboardPage() {
                   </div>
                 </div>
               </section>
+
+              {/* Interactive Cashflow & Spending Charts */}
+              <SpendingCharts
+                transactions={transactions}
+                safeToSpendTodayUsd={safeToSpendToday}
+                fmt={fmt}
+                toDisplay={toDisplay}
+                title14Day={t.spendingCharts}
+                titleCategoryMix={t.categoryMix}
+              />
 
               {/* 1-CLICK QUICK-LOG ("ClickPads") */}
               <section className="space-y-3 sm:space-y-4">
@@ -2210,44 +2345,103 @@ export function DashboardPage() {
           )}
 
           {/* =========================================================
-              TAB 3.4: TONTINE / DARET SAVINGS CIRCLES
+              TAB 3.4: TONTINE / DARET & DEBTS TRACKER
              ========================================================= */}
           {activeTab === 'tontine' && user && (
-            <TontinePanel
-              userId={user.id}
-              tontines={tontines}
-              setTontines={setTontines}
-              activeCurrency={activeCurrency}
-              fmt={fmt}
-              toDisplay={toDisplay}
-              showToast={showToast}
-              onLogTontineTx={async ({ title, emoji, amountUsd, txType, notes }) => {
-                const { data, error } = await supabase
-                  .from('koinclick_transactions')
-                  .insert({
-                    user_id: user.id,
-                    jar_id: null,
-                    title,
-                    emoji,
-                    amount: amountUsd,
-                    tx_type: txType,
-                    category: txType === 'income' ? 'Salary / Income' : 'Utilities & Bills',
-                    source: 'manual',
-                    notes,
-                    tx_date: new Date().toISOString(),
-                  })
-                  .select('*')
-                  .single()
-                if (!error && data) {
-                  setTransactions((prev) => [data, ...prev])
-                  showToast(
-                    txType === 'income'
-                      ? `🎉 Logged Tontine pot (+${rawFmt(amountUsd)})`
-                      : `🤝 Logged Tontine share (-${rawFmt(amountUsd)})`
-                  )
-                }
-              }}
-            />
+            <div className="space-y-6">
+              <div className="inline-flex p-1 rounded-xl bg-zinc-900 border border-zinc-800">
+                <button
+                  type="button"
+                  onClick={() => setTontineSubTab('tontine')}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition ${
+                    tontineSubTab === 'tontine'
+                      ? 'bg-indigo-600 text-white'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  🤝 {t.tontineCircles} ({tontines.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTontineSubTab('debts')}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition ${
+                    tontineSubTab === 'debts'
+                      ? 'bg-indigo-600 text-white'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  💳 {t.debtsLoans} ({debts.filter((d) => d.status === 'open').length})
+                </button>
+              </div>
+
+              {tontineSubTab === 'tontine' ? (
+                <TontinePanel
+                  userId={user.id}
+                  tontines={tontines}
+                  setTontines={setTontines}
+                  activeCurrency={activeCurrency}
+                  fmt={fmt}
+                  toDisplay={toDisplay}
+                  showToast={showToast}
+                  onLogTontineTx={async ({ title, emoji, amountUsd, txType, notes }) => {
+                    const { data, error } = await supabase
+                      .from('koinclick_transactions')
+                      .insert({
+                        user_id: user.id,
+                        jar_id: null,
+                        title,
+                        emoji,
+                        amount: amountUsd,
+                        tx_type: txType,
+                        category: txType === 'income' ? 'Salary / Income' : 'Utilities & Bills',
+                        source: 'manual',
+                        notes,
+                        tx_date: new Date().toISOString(),
+                      })
+                      .select('*')
+                      .single()
+                    if (!error && data) {
+                      setTransactions((prev) => [data, ...prev])
+                      showToast(
+                        txType === 'income'
+                          ? `🎉 Logged Tontine pot (+${rawFmt(amountUsd)})`
+                          : `🤝 Logged Tontine share (-${rawFmt(amountUsd)})`
+                      )
+                    }
+                  }}
+                />
+              ) : (
+                <DebtsPanel
+                  userId={user.id}
+                  debts={debts}
+                  setDebts={setDebts}
+                  activeCurrency={activeCurrency}
+                  fmt={fmt}
+                  showToast={showToast}
+                  onLogDebtTx={async ({ title, emoji, amountUsd, txType, notes }) => {
+                    const { data, error } = await supabase
+                      .from('koinclick_transactions')
+                      .insert({
+                        user_id: user.id,
+                        jar_id: null,
+                        title,
+                        emoji,
+                        amount: amountUsd,
+                        tx_type: txType,
+                        category: txType === 'income' ? 'Salary / Income' : 'General',
+                        source: 'manual',
+                        notes,
+                        tx_date: new Date().toISOString(),
+                      })
+                      .select('*')
+                      .single()
+                    if (!error && data) {
+                      setTransactions((prev) => [data, ...prev])
+                    }
+                  }}
+                />
+              )}
+            </div>
           )}
 
           {/* =========================================================
